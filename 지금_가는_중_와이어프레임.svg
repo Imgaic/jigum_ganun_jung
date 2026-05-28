@@ -1,0 +1,405 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="1800" viewBox="0 0 2400 1800">
+  <defs>
+    <style>
+      .bg { fill: #f6f8fb; }
+      .title { font: 700 46px "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; fill: #111827; }
+      .subtitle { font: 400 22px "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; fill: #64748b; }
+      .phone { fill: #ffffff; stroke: #111827; stroke-width: 3; }
+      .screen-title { font: 700 24px "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; fill: #111827; }
+      .section { font: 700 16px "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; fill: #334155; }
+      .text { font: 400 15px "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; fill: #475569; }
+      .small { font: 400 13px "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; fill: #64748b; }
+      .label { font: 700 13px "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; fill: #2563eb; }
+      .chip { fill: #eff6ff; stroke: #93c5fd; stroke-width: 1.5; }
+      .card { fill: #ffffff; stroke: #cbd5e1; stroke-width: 1.6; }
+      .input { fill: #f8fafc; stroke: #94a3b8; stroke-width: 1.8; }
+      .primary { fill: #2563eb; }
+      .primary-text { font: 700 16px "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; fill: #ffffff; }
+      .tab { fill: #f1f5f9; stroke: #cbd5e1; stroke-width: 1.2; }
+      .muted-line { stroke: #cbd5e1; stroke-width: 1.5; }
+      .flow { fill: none; stroke: #94a3b8; stroke-width: 2.5; stroke-dasharray: 8 8; marker-end: url(#arrow); }
+      .status-low { fill: #dcfce7; stroke: #86efac; stroke-width: 1.2; }
+      .status-mid { fill: #fef9c3; stroke: #fde047; stroke-width: 1.2; }
+      .status-high { fill: #fee2e2; stroke: #fca5a5; stroke-width: 1.2; }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="2400" height="1800"/>
+  <text class="title" x="90" y="90">지금 가는 중 - 모바일 와이어프레임</text>
+  <text class="subtitle" x="90" y="126">교내 실시간 장소 정보 확인과 사용자 제보 흐름 중심의 MVP 화면 설계</text>
+
+  <!-- Screen 1: Home -->
+  <g transform="translate(90 190)">
+    <rect class="phone" x="0" y="0" width="300" height="560" rx="34"/>
+    <rect class="muted-line" x="120" y="20" width="60" height="6" rx="3"/>
+    <text class="screen-title" x="28" y="66">지금 가는 중</text>
+    <rect class="input" x="28" y="88" width="244" height="58" rx="14"/>
+    <text class="text" x="48" y="113">어디가 궁금하세요?</text>
+    <text class="small" x="48" y="134">공부할 곳, 310관...</text>
+
+    <text class="section" x="28" y="180">빠른 목적 선택</text>
+    <rect class="chip" x="28" y="198" width="58" height="34" rx="17"/>
+    <text class="label" x="44" y="220">공부</text>
+    <rect class="chip" x="94" y="198" width="58" height="34" rx="17"/>
+    <text class="label" x="110" y="220">식사</text>
+    <rect class="chip" x="160" y="198" width="58" height="34" rx="17"/>
+    <text class="label" x="176" y="220">휴식</text>
+    <rect class="chip" x="226" y="198" width="46" height="34" rx="17"/>
+    <text class="label" x="238" y="220">전체</text>
+
+    <text class="section" x="28" y="266">현재 위치 근처</text>
+    <rect class="card" x="28" y="284" width="244" height="72" rx="12"/>
+    <text class="text" x="44" y="310">310관 3층 라운지</text>
+    <rect class="status-mid" x="44" y="323" width="54" height="22" rx="11"/>
+    <text class="small" x="58" y="339">보통</text>
+    <text class="small" x="106" y="339">3분 전</text>
+    <rect class="card" x="28" y="368" width="244" height="72" rx="12"/>
+    <text class="text" x="44" y="394">중앙도서관 열람실</text>
+    <rect class="status-high" x="44" y="407" width="54" height="22" rx="11"/>
+    <text class="small" x="58" y="423">많음</text>
+    <text class="small" x="106" y="423">5분 전</text>
+
+    <rect class="primary" x="28" y="462" width="244" height="46" rx="14"/>
+    <text class="primary-text" x="83" y="491">+ 지금 장소 제보하기</text>
+    <rect class="tab" x="0" y="520" width="300" height="40" rx="0"/>
+    <text class="small" x="31" y="545">홈</text>
+    <text class="small" x="96" y="545">검색</text>
+    <text class="small" x="162" y="545">제보</text>
+    <text class="small" x="224" y="545">내 정보</text>
+  </g>
+
+  <!-- Screen 2: Search -->
+  <g transform="translate(440 190)">
+    <rect class="phone" x="0" y="0" width="300" height="560" rx="34"/>
+    <rect class="muted-line" x="120" y="20" width="60" height="6" rx="3"/>
+    <text class="screen-title" x="28" y="66">장소 찾기</text>
+    <rect class="input" x="28" y="88" width="244" height="50" rx="14"/>
+    <text class="small" x="48" y="119">검색어 입력</text>
+
+    <text class="section" x="28" y="174">목적</text>
+    <rect class="chip" x="28" y="192" width="58" height="34" rx="17"/>
+    <text class="label" x="44" y="214">공부</text>
+    <rect class="chip" x="94" y="192" width="58" height="34" rx="17"/>
+    <text class="label" x="110" y="214">식사</text>
+    <rect class="chip" x="160" y="192" width="58" height="34" rx="17"/>
+    <text class="label" x="176" y="214">휴식</text>
+    <rect class="chip" x="226" y="192" width="46" height="34" rx="17"/>
+    <text class="label" x="238" y="214">대화</text>
+
+    <text class="section" x="28" y="260">건물</text>
+    <rect class="chip" x="28" y="278" width="66" height="34" rx="17"/>
+    <text class="label" x="45" y="300">310관</text>
+    <rect class="chip" x="102" y="278" width="66" height="34" rx="17"/>
+    <text class="label" x="119" y="300">309관</text>
+    <rect class="chip" x="176" y="278" width="72" height="34" rx="17"/>
+    <text class="label" x="192" y="300">도서관</text>
+
+    <text class="section" x="28" y="346">층수</text>
+    <rect class="chip" x="28" y="364" width="52" height="34" rx="17"/>
+    <text class="label" x="42" y="386">1층</text>
+    <rect class="chip" x="88" y="364" width="52" height="34" rx="17"/>
+    <text class="label" x="102" y="386">2층</text>
+    <rect class="chip" x="148" y="364" width="52" height="34" rx="17"/>
+    <text class="label" x="162" y="386">3층</text>
+    <rect class="chip" x="208" y="364" width="64" height="34" rx="17"/>
+    <text class="label" x="222" y="386">전체</text>
+
+    <text class="section" x="28" y="432">혼잡도</text>
+    <rect class="chip" x="28" y="450" width="58" height="34" rx="17"/>
+    <text class="label" x="44" y="472">여유</text>
+    <rect class="chip" x="94" y="450" width="58" height="34" rx="17"/>
+    <text class="label" x="110" y="472">보통</text>
+    <rect class="chip" x="160" y="450" width="88" height="34" rx="17"/>
+    <text class="label" x="176" y="472">혼잡 제외</text>
+
+    <rect class="primary" x="28" y="502" width="244" height="42" rx="14"/>
+    <text class="primary-text" x="86" y="529">조건에 맞는 장소 보기</text>
+  </g>
+
+  <!-- Screen 3: List -->
+  <g transform="translate(790 190)">
+    <rect class="phone" x="0" y="0" width="300" height="560" rx="34"/>
+    <rect class="muted-line" x="120" y="20" width="60" height="6" rx="3"/>
+    <text class="screen-title" x="28" y="66">공부 · 310관</text>
+    <text class="small" x="28" y="92">8개 장소</text>
+    <rect class="input" x="160" y="72" width="112" height="34" rx="17"/>
+    <text class="small" x="181" y="94">가까운 순 ▼</text>
+
+    <rect class="card" x="28" y="126" width="244" height="96" rx="12"/>
+    <text class="text" x="44" y="154">310관 3층 라운지</text>
+    <rect class="status-mid" x="44" y="168" width="54" height="22" rx="11"/>
+    <text class="small" x="58" y="184">보통</text>
+    <text class="small" x="108" y="184">2분 전</text>
+    <text class="small" x="44" y="206">자리 있음 가능성 높음</text>
+
+    <rect class="card" x="28" y="240" width="244" height="96" rx="12"/>
+    <text class="text" x="44" y="268">310관 5층 휴게공간</text>
+    <rect class="status-low" x="44" y="282" width="54" height="22" rx="11"/>
+    <text class="small" x="58" y="298">적음</text>
+    <text class="small" x="108" y="298">7분 전</text>
+    <text class="small" x="44" y="320">조용한 편</text>
+
+    <rect class="card" x="28" y="354" width="244" height="96" rx="12"/>
+    <text class="text" x="44" y="382">310관 지하 식당</text>
+    <rect class="status-high" x="44" y="396" width="54" height="22" rx="11"/>
+    <text class="small" x="58" y="412">많음</text>
+    <text class="small" x="108" y="412">1분 전</text>
+    <text class="small" x="44" y="434">대기 가능성 있음</text>
+
+    <rect class="tab" x="0" y="520" width="300" height="40"/>
+    <text class="small" x="31" y="545">홈</text>
+    <text class="small" x="96" y="545">검색</text>
+    <text class="small" x="162" y="545">제보</text>
+    <text class="small" x="224" y="545">내 정보</text>
+  </g>
+
+  <!-- Screen 4: Detail -->
+  <g transform="translate(1140 190)">
+    <rect class="phone" x="0" y="0" width="300" height="560" rx="34"/>
+    <rect class="muted-line" x="120" y="20" width="60" height="6" rx="3"/>
+    <text class="screen-title" x="28" y="66">‹ 310관 3층 라운지</text>
+
+    <text class="section" x="28" y="108">현재 혼잡도</text>
+    <rect class="card" x="28" y="126" width="244" height="108" rx="14"/>
+    <rect class="status-mid" x="44" y="148" width="78" height="34" rx="17"/>
+    <text class="section" x="68" y="171">보통</text>
+    <text class="small" x="44" y="202">최근 업데이트 2분 전</text>
+    <text class="small" x="44" y="222">신뢰도 높음 · 제보 3건</text>
+
+    <text class="section" x="28" y="270">상세 정보</text>
+    <text class="text" x="28" y="300">위치: 310관 3층 엘리베이터 옆</text>
+    <text class="text" x="28" y="326">목적: 공부, 휴식</text>
+    <text class="text" x="28" y="352">예상 자리: 일부 있음</text>
+
+    <text class="section" x="28" y="392">최근 제보</text>
+    <line class="muted-line" x1="28" y1="408" x2="272" y2="408"/>
+    <text class="small" x="38" y="431">보통 · 2분 전</text>
+    <text class="small" x="38" y="459">적음 · 6분 전</text>
+    <text class="small" x="38" y="487">보통 · 9분 전</text>
+
+    <rect class="primary" x="28" y="508" width="244" height="40" rx="14"/>
+    <text class="primary-text" x="92" y="534">이 장소 정보 제보하기</text>
+  </g>
+
+  <!-- Screen 5: Location Confirm -->
+  <g transform="translate(1490 190)">
+    <rect class="phone" x="0" y="0" width="300" height="560" rx="34"/>
+    <rect class="muted-line" x="120" y="20" width="60" height="6" rx="3"/>
+    <text class="screen-title" x="28" y="66">위치 확인</text>
+
+    <text class="section" x="28" y="114">현재 감지된 위치</text>
+    <rect class="card" x="28" y="136" width="244" height="102" rx="14"/>
+    <circle cx="72" cy="187" r="24" fill="#dbeafe" stroke="#60a5fa" stroke-width="2"/>
+    <text class="label" x="62" y="192">GPS</text>
+    <text class="text" x="110" y="176">310관 근처로 보여요</text>
+    <text class="small" x="110" y="203">GPS 확인 완료</text>
+
+    <text class="section" x="28" y="286">제보할 건물이 맞나요?</text>
+    <rect class="chip" x="28" y="310" width="74" height="38" rx="19"/>
+    <text class="label" x="47" y="335">310관</text>
+    <rect class="chip" x="112" y="310" width="74" height="38" rx="19"/>
+    <text class="label" x="131" y="335">309관</text>
+    <rect class="chip" x="28" y="362" width="112" height="38" rx="19"/>
+    <text class="label" x="51" y="387">직접 선택</text>
+
+    <rect class="primary" x="28" y="476" width="244" height="46" rx="14"/>
+    <text class="primary-text" x="134" y="505">다음</text>
+  </g>
+
+  <!-- Screen 6: Report Input -->
+  <g transform="translate(1840 190)">
+    <rect class="phone" x="0" y="0" width="300" height="560" rx="34"/>
+    <rect class="muted-line" x="120" y="20" width="60" height="6" rx="3"/>
+    <text class="screen-title" x="28" y="66">장소 정보 제보</text>
+
+    <text class="section" x="28" y="108">건물</text>
+    <rect class="input" x="28" y="126" width="244" height="42" rx="12"/>
+    <text class="text" x="48" y="153">310관</text>
+
+    <text class="section" x="28" y="204">상세 위치</text>
+    <rect class="input" x="28" y="222" width="244" height="42" rx="12"/>
+    <text class="small" x="48" y="249">라운지, 식당 검색</text>
+    <rect class="chip" x="28" y="276" width="88" height="32" rx="16"/>
+    <text class="label" x="44" y="297">3층 라운지</text>
+    <rect class="chip" x="124" y="276" width="76" height="32" rx="16"/>
+    <text class="label" x="140" y="297">지하 식당</text>
+    <rect class="chip" x="28" y="316" width="104" height="32" rx="16"/>
+    <text class="label" x="44" y="337">5층 휴게공간</text>
+
+    <text class="section" x="28" y="382">혼잡도</text>
+    <rect class="status-low" x="28" y="400" width="68" height="32" rx="16"/>
+    <text class="small" x="39" y="421">매우 적음</text>
+    <rect class="status-low" x="104" y="400" width="54" height="32" rx="16"/>
+    <text class="small" x="119" y="421">적음</text>
+    <rect class="status-mid" x="166" y="400" width="54" height="32" rx="16"/>
+    <text class="small" x="181" y="421">보통</text>
+    <rect class="status-high" x="228" y="400" width="44" height="32" rx="16"/>
+    <text class="small" x="239" y="421">많음</text>
+
+    <text class="section" x="28" y="462">예상 체류시간</text>
+    <rect class="chip" x="28" y="480" width="54" height="30" rx="15"/>
+    <text class="label" x="42" y="500">15분</text>
+    <rect class="chip" x="90" y="480" width="54" height="30" rx="15"/>
+    <text class="label" x="104" y="500">30분</text>
+    <rect class="chip" x="152" y="480" width="62" height="30" rx="15"/>
+    <text class="label" x="168" y="500">1시간</text>
+
+    <rect class="primary" x="28" y="522" width="244" height="30" rx="12"/>
+    <text class="primary-text" x="107" y="543">제보 등록하기</text>
+  </g>
+
+  <!-- Screen 7: Complete -->
+  <g transform="translate(90 900)">
+    <rect class="phone" x="0" y="0" width="300" height="560" rx="34"/>
+    <rect class="muted-line" x="120" y="20" width="60" height="6" rx="3"/>
+    <text class="screen-title" x="28" y="66">제보 완료</text>
+
+    <rect class="card" x="28" y="112" width="244" height="132" rx="18"/>
+    <circle cx="150" cy="152" r="28" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+    <path d="M137 151 l9 9 l18 -20" fill="none" stroke="#16a34a" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    <text class="screen-title" x="69" y="202">정보가 등록됐어요</text>
+    <text class="label" x="104" y="226">+10 포인트 적립</text>
+
+    <text class="section" x="28" y="292">등록한 정보</text>
+    <rect class="card" x="28" y="310" width="244" height="106" rx="14"/>
+    <text class="text" x="48" y="338">310관 3층 라운지</text>
+    <text class="text" x="48" y="366">혼잡도 보통</text>
+    <text class="text" x="48" y="394">유효시간 약 30분</text>
+
+    <rect class="primary" x="28" y="454" width="244" height="42" rx="14"/>
+    <text class="primary-text" x="105" y="481">주변 장소 보기</text>
+    <rect class="input" x="28" y="510" width="244" height="34" rx="12"/>
+    <text class="label" x="118" y="532">홈으로 가기</text>
+  </g>
+
+  <!-- Screen 8: Chatbot -->
+  <g transform="translate(440 900)">
+    <rect class="phone" x="0" y="0" width="300" height="560" rx="34"/>
+    <rect class="muted-line" x="120" y="20" width="60" height="6" rx="3"/>
+    <text class="screen-title" x="28" y="66">장소 추천 챗봇</text>
+
+    <rect class="card" x="28" y="96" width="244" height="74" rx="14"/>
+    <text class="text" x="48" y="126">지금 공부할 곳 찾고</text>
+    <text class="text" x="48" y="150">있나요?</text>
+
+    <text class="section" x="28" y="208">추천 질문</text>
+    <rect class="chip" x="28" y="226" width="132" height="34" rx="17"/>
+    <text class="label" x="44" y="248">공부할 곳 추천</text>
+    <rect class="chip" x="28" y="270" width="136" height="34" rx="17"/>
+    <text class="label" x="44" y="292">310관 식당 혼잡도</text>
+    <rect class="chip" x="28" y="314" width="132" height="34" rx="17"/>
+    <text class="label" x="44" y="336">사람 적은 휴식 공간</text>
+
+    <text class="section" x="28" y="390">대화</text>
+    <rect class="card" x="28" y="406" width="244" height="48" rx="14"/>
+    <text class="small" x="44" y="435">나: 310관 공부할 곳 있어?</text>
+    <rect class="card" x="28" y="464" width="244" height="56" rx="14"/>
+    <text class="small" x="44" y="490">3층 라운지와 5층 휴게공간이</text>
+    <text class="small" x="44" y="508">적당해요.</text>
+
+    <rect class="input" x="28" y="528" width="244" height="24" rx="12"/>
+    <text class="small" x="48" y="545">메시지 입력</text>
+  </g>
+
+  <!-- Screen 9: Push Confirm -->
+  <g transform="translate(790 900)">
+    <rect class="phone" x="0" y="0" width="300" height="560" rx="34"/>
+    <rect class="muted-line" x="120" y="20" width="60" height="6" rx="3"/>
+    <text class="screen-title" x="28" y="66">이동 여부 확인</text>
+
+    <rect class="card" x="28" y="110" width="244" height="156" rx="18"/>
+    <text class="section" x="48" y="146">아직 310관 3층</text>
+    <text class="section" x="48" y="174">라운지에 있나요?</text>
+    <text class="small" x="48" y="212">제보한 정보가 곧 만료돼요.</text>
+    <text class="small" x="48" y="236">현재 상태를 알려주세요.</text>
+
+    <rect class="primary" x="28" y="318" width="244" height="46" rx="14"/>
+    <text class="primary-text" x="111" y="347">아직 있어요</text>
+    <rect class="input" x="28" y="382" width="244" height="46" rx="14"/>
+    <text class="label" x="116" y="411">이동했어요</text>
+    <rect class="input" x="28" y="446" width="244" height="46" rx="14"/>
+    <text class="label" x="91" y="475">혼잡도 다시 입력하기</text>
+  </g>
+
+  <!-- Screen 10: My Page -->
+  <g transform="translate(1140 900)">
+    <rect class="phone" x="0" y="0" width="300" height="560" rx="34"/>
+    <rect class="muted-line" x="120" y="20" width="60" height="6" rx="3"/>
+    <text class="screen-title" x="28" y="66">내 정보</text>
+
+    <rect class="card" x="28" y="100" width="244" height="102" rx="16"/>
+    <text class="section" x="48" y="134">나의 포인트</text>
+    <text class="screen-title" x="48" y="174">240 P</text>
+
+    <text class="section" x="28" y="250">최근 제보 내역</text>
+    <rect class="card" x="28" y="268" width="244" height="70" rx="12"/>
+    <text class="text" x="44" y="296">310관 3층 라운지</text>
+    <text class="small" x="44" y="320">보통 · +10P · 12분 전</text>
+    <rect class="card" x="28" y="350" width="244" height="70" rx="12"/>
+    <text class="text" x="44" y="378">도서관 2층 열람실</text>
+    <text class="small" x="44" y="402">많음 · +10P · 어제</text>
+
+    <rect class="tab" x="0" y="520" width="300" height="40"/>
+    <text class="small" x="31" y="545">홈</text>
+    <text class="small" x="96" y="545">검색</text>
+    <text class="small" x="162" y="545">제보</text>
+    <text class="small" x="224" y="545">내 정보</text>
+  </g>
+
+  <!-- Screen 11: Empty/Expired State -->
+  <g transform="translate(1490 900)">
+    <rect class="phone" x="0" y="0" width="300" height="560" rx="34"/>
+    <rect class="muted-line" x="120" y="20" width="60" height="6" rx="3"/>
+    <text class="screen-title" x="28" y="66">업데이트 필요</text>
+
+    <rect class="card" x="28" y="122" width="244" height="220" rx="18"/>
+    <circle cx="150" cy="182" r="34" fill="#f1f5f9" stroke="#94a3b8" stroke-width="2"/>
+    <text class="section" x="77" y="256">최근 정보가 없어요</text>
+    <text class="small" x="55" y="288">이 장소의 혼잡도 정보가 만료됐습니다.</text>
+    <text class="small" x="75" y="312">새 제보가 있으면 바로 반영돼요.</text>
+
+    <rect class="primary" x="28" y="398" width="244" height="46" rx="14"/>
+    <text class="primary-text" x="94" y="427">이 장소 제보하기</text>
+    <rect class="input" x="28" y="462" width="244" height="46" rx="14"/>
+    <text class="label" x="111" y="491">다른 장소 보기</text>
+  </g>
+
+  <!-- Screen 12: Flow Summary -->
+  <g transform="translate(1840 900)">
+    <rect class="phone" x="0" y="0" width="300" height="560" rx="34"/>
+    <rect class="muted-line" x="120" y="20" width="60" height="6" rx="3"/>
+    <text class="screen-title" x="28" y="66">핵심 플로우</text>
+
+    <rect class="card" x="28" y="104" width="244" height="74" rx="14"/>
+    <text class="section" x="48" y="134">1. 장소 찾기</text>
+    <text class="small" x="48" y="158">목적/건물/혼잡도 조건 선택</text>
+    <path class="flow" d="M150 186 L150 226"/>
+
+    <rect class="card" x="28" y="236" width="244" height="74" rx="14"/>
+    <text class="section" x="48" y="266">2. 리스트 비교</text>
+    <text class="small" x="48" y="290">혼잡도와 업데이트 시간 확인</text>
+    <path class="flow" d="M150 318 L150 358"/>
+
+    <rect class="card" x="28" y="368" width="244" height="74" rx="14"/>
+    <text class="section" x="48" y="398">3. 상세 확인</text>
+    <text class="small" x="48" y="422">신뢰도와 최근 제보 확인</text>
+    <path class="flow" d="M150 450 L150 490"/>
+
+    <rect class="primary" x="28" y="500" width="244" height="42" rx="14"/>
+    <text class="primary-text" x="84" y="527">필요 시 바로 제보</text>
+  </g>
+
+  <!-- Flow arrows between main MVP screens -->
+  <path class="flow" d="M390 470 C410 470 420 470 440 470"/>
+  <path class="flow" d="M740 470 C760 470 770 470 790 470"/>
+  <path class="flow" d="M1090 470 C1110 470 1120 470 1140 470"/>
+  <path class="flow" d="M1440 470 C1460 470 1470 470 1490 470"/>
+  <path class="flow" d="M1790 470 C1810 470 1820 470 1840 470"/>
+  <path class="flow" d="M1990 750 C1990 820 240 820 240 900"/>
+
+  <text class="subtitle" x="90" y="1680">MVP 우선 화면: 홈 → 장소 검색 → 장소 리스트 → 장소 상세 → 위치 확인 → 장소 정보 제보 → 제보 완료</text>
+  <text class="subtitle" x="90" y="1716">확장 화면: 챗봇 추천, 이동 여부 확인, 내 정보/포인트, 업데이트 필요 상태</text>
+</svg>
