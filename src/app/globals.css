@@ -84,8 +84,10 @@ html, body {
 /* Realistic Mobile Frame on Desktop, Hidden on Mobile */
 .device-frame {
   position: relative;
-  width: 390px;
-  height: 844px;
+  height: 85vh; /* Scale dynamically based on vertical height to prevent cutoff */
+  max-height: 844px; /* Do not exceed actual layout size */
+  aspect-ratio: 390 / 844; /* Preserve perfect iPhone 15 Pro ratio */
+  width: auto; /* Width scales automatically based on height and aspect ratio */
   background-color: var(--background);
   border-radius: 48px;
   box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.6), 

@@ -248,7 +248,7 @@ export default function Home() {
     "home" | "search" | "list" | "detail" | "report_gps" | "report_input" | "report_complete" | "chatbot" | "myinfo"
   >("home");
 
-  const [places, setPlaces] = useState<Place[]>(INITIAL_PLACES);
+  const [places, setPlaces] = useState<Place[]>([]);
   const [userPoints, setUserPoints] = useState<number>(120); // Starting points
   const [currentTime, setCurrentTime] = useState<string>("13:43");
   const [myGPSBuilding, setMyGPSBuilding] = useState<string>("310관"); // Simulated GPS building
@@ -286,6 +286,10 @@ export default function Home() {
   // ==========================================
   // 5. Simulated Actions & Clock
   // ==========================================
+  useEffect(() => {
+    setPlaces(INITIAL_PLACES);
+  }, []);
+
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
