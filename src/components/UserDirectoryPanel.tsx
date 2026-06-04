@@ -3,6 +3,7 @@
 import React from "react";
 import type { UserDirectoryEntry } from "../lib/types";
 import { useUserContext } from "../context/UserContext";
+import PlaceDirectoryPanel from "./PlaceDirectoryPanel";
 
 const headerCellStyle: React.CSSProperties = {
   padding: "0 6px 6px",
@@ -37,6 +38,7 @@ export default function UserDirectoryPanel() {
   const { currentUser, userDirectory, refreshUserDirectory, switchUser } = useUserContext();
   const [switchingUserId, setSwitchingUserId] = React.useState<number | null>(null);
   const [switchError, setSwitchError] = React.useState<string>("");
+  const [activeTable, setActiveTable] = React.useState<"users" | "places">("users");
   const topUser = userDirectory[0];
 
   const handleSwitchUser = async (entry: UserDirectoryEntry) => {
@@ -64,6 +66,46 @@ export default function UserDirectoryPanel() {
         gap: "14px",
         boxShadow: "var(--shadow-lg)",
       }}>
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "8px",
+          padding: "4px",
+          border: "1px solid var(--border)",
+          borderRadius: "12px",
+          backgroundColor: "var(--background)",
+        }}>
+          {[
+            { key: "users" as const, label: "유저" },
+            { key: "places" as const, label: "장소" },
+          ].map((tab) => {
+            const isActive = activeTable === tab.key;
+            return (
+              <button
+                key={tab.key}
+                type="button"
+                onClick={() => setActiveTable(tab.key)}
+                aria-pressed={isActive}
+                style={{
+                  height: "34px",
+                  border: "1px solid var(--border)",
+                  borderRadius: "9px",
+                  backgroundColor: isActive ? "var(--primary)" : "var(--surface)",
+                  color: isActive ? "white" : "var(--foreground)",
+                  fontSize: "12px",
+                  fontWeight: 950,
+                  cursor: "pointer",
+                  transition: "var(--transition-smooth)",
+                }}
+              >
+                {tab.label}
+              </button>
+            );
+          })}
+        </div>
+
+        {activeTable === "users" ? (
+          <>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "12px" }}>
           <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
             <span style={{ fontSize: "10px", fontWeight: 900, color: "var(--primary)", letterSpacing: "0.06em" }}>
@@ -236,6 +278,10 @@ export default function UserDirectoryPanel() {
             </div>
           )}
         </div>
+          </>
+        ) : (
+          <PlaceDirectoryPanel />
+        )}
       </div>
     </aside>
   );
