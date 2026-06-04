@@ -104,7 +104,7 @@ export default function ExternalHud({
           }} />
         </div>
         <p style={{ fontSize: "11px", color: "var(--text-muted)", lineHeight: "1.4" }}>
-          가상 학생 100명이 교내 전역에서 무작위로 혼잡도를 제보하여 데이터를 동적 갱신하는 상태를 재현합니다.
+          가상 학생100명이 교내 전역에서 무작위로 혼잡도를 제보하여 데이터를 동적 갱신하는 상태를 재현합니다.
         </p>
 
         {/* 제보 생성 개수 입력 */}
@@ -227,11 +227,8 @@ export default function ExternalHud({
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
           <span style={{ fontSize: "16px" }}>⚡</span>
-          <span style={{ fontSize: "13px", fontWeight: "900", color: "var(--foreground)" }}>재제보 푸시 시간 가속기 (HUD)</span>
+          <span style={{ fontSize: "13px", fontWeight: "900", color: "var(--foreground)" }}>시간 가속기</span>
         </div>
-        <p style={{ fontSize: "11px", color: "var(--text-muted)", lineHeight: "1.4" }}>
-          제보 이후 유효기간(예상 체류시간) 만료 5분 전의 알림 발송 속도를 조절합니다. 실시간을 기본으로 하되 배속을 높여 즉시 확인을 연출할 수 있습니다.
-        </p>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "6px", marginTop: "4px" }}>
           {[
             { value: 1, label: "1배속 (실시간)" },

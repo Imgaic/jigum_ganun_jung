@@ -14,6 +14,25 @@ export default function CrowdBadge({ place, customClick = false }: CrowdBadgePro
   const { unlockedUntil, handlePromptUnlock } = useUserContext();
   const isUnlocked = unlockedUntil > Date.now();
   const currentCalcLevel = calculateWeightedCrowdLevel(place.history);
+  
+  // 정보가 전혀 없을 때 ("알 수 없음") 상태면 락 유무에 관계없이 그냥 "알 수 없음" 배지 표시
+  if (currentCalcLevel === 0) {
+    const crowdInfo = getCrowdLevelInfo(0);
+    return (
+      <span style={{
+        fontSize: "11px",
+        fontWeight: "850",
+        padding: "4px 8px",
+        borderRadius: "20px",
+        color: crowdInfo.color,
+        backgroundColor: crowdInfo.bg,
+        border: `1px solid ${crowdInfo.border}`,
+        whiteSpace: "nowrap"
+      }}>
+        {crowdInfo.label}
+      </span>
+    );
+  }
 
   // 정보가 잠겨 있는 상태일 경우
   if (!isUnlocked) {

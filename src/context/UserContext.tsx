@@ -58,14 +58,9 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     return () => clearInterval(interval);
   }, [unlockedUntil]);
 
-  // 시뮬레이터 연출용: 사용자 제보에 따른 유효기간 알림 타이머 스케줄러 (배속 제어 연동)
   useEffect(() => {
     if (!activeReport) {
-      // 제보가 없을 때: 초기 진입 후 15초 경과 시 데모용 더미 알림 발송 (폴백, 배속 반영)
-      const timer = setTimeout(() => {
-        setShowReReportNotification(true);
-      }, 15000 / timeSpeed);
-      return () => clearTimeout(timer);
+      return;
     }
 
     // 제보가 있을 때: 예상 체류시간(분) 대비 5분 전(실제 밀리초) 대비 배속 적용

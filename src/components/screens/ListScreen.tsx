@@ -189,10 +189,11 @@ export default function ListScreen() {
               <div
                 key={place.id}
                 onClick={() => {
-                  if (unlockedUntil <= Date.now()) {
-                    handlePromptUnlock();
-                  } else {
+                  const isUnknown = calculateWeightedCrowdLevel(place.history) === 0;
+                  if (isUnknown || unlockedUntil > Date.now()) {
                     router.push(`/detail/${place.id}`);
+                  } else {
+                    handlePromptUnlock();
                   }
                 }}
                 style={{
@@ -201,26 +202,50 @@ export default function ListScreen() {
                   borderRadius: "var(--radius-sm)",
                   border: "1px solid var(--border)",
                   display: "flex",
-                  flexDirection: "column",
-                  gap: "8px",
+                  gap: "12px",
                   cursor: "pointer",
                   boxShadow: "var(--shadow-sm)",
                   transition: "var(--transition-smooth)"
                 }}
               >
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                  <div>
-                    <span style={{ fontSize: "10px", fontWeight: "700", color: "var(--primary)", backgroundColor: "var(--primary-light)", padding: "2.5px 6px", borderRadius: "6px" }}>
-                      {place.building} {place.floor}
-                    </span>
-                    <h4 style={{ fontSize: "14px", fontWeight: "800", color: "var(--foreground)", marginTop: "4px" }}>
-                      {place.name}
-                    </h4>
-                  </div>
-
-                  {/* 공통 CrowdBadge 마운트 */}
-                  <CrowdBadge place={place} customClick />
+                {/* 썸네일 이미지 */}
+                <div style={{
+                  width: "64px",
+                  height: "64px",
+                  borderRadius: "10px",
+                  overflow: "hidden",
+                  backgroundColor: "var(--surface-hover)",
+                  flexShrink: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  border: "1px solid var(--border)",
+                  alignSelf: "center"
+                }}>
+                  {place.imageUrl ? (
+                    <img 
+                      src={place.imageUrl} 
+                      alt={place.name} 
+                      style={{ width: "100%", height: "100%", objectFit: "cover" }} 
+                    />
+                  ) : (
+                    <span style={{ fontSize: "22px" }}>🏢</span>
+                  )}
                 </div>
+
+                {/* 텍스트 영역 */}
+                <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "6px", minWidth: 0 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "8px" }}>
+                    <div style={{ minWidth: 0 }}>
+                      <span style={{ fontSize: "9.5px", fontWeight: "700", color: "var(--primary)", backgroundColor: "var(--primary-light)", padding: "2.5px 6px", borderRadius: "6px" }}>
+                        {place.building} {place.floor}
+                      </span>
+                      <h4 style={{ fontSize: "14px", fontWeight: "800", color: "var(--foreground)", marginTop: "4px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                        {place.name}
+                      </h4>
+                    </div>
+                    <CrowdBadge place={place} customClick />
+                  </div>
 
                 <p style={{ fontSize: "11.5px", color: "var(--text-muted)" }}>
                   {place.detailLocation}
@@ -241,6 +266,7 @@ export default function ListScreen() {
                       {isExpired ? "업데이트 필요 ⚠️" : getRelativeTimeText(place.updatedAt)}
                     </span>
                   </div>
+                </div>
                 </div>
               </div>
             );

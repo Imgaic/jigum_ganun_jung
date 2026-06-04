@@ -55,24 +55,46 @@ export default function DetailScreen({ selectedPlace }: DetailScreenProps) {
           borderRadius: "var(--radius-md)",
           border: "1px solid var(--border)",
           padding: "18px",
-          boxShadow: "var(--shadow-sm)"
+          boxShadow: "var(--shadow-sm)",
+          display: "flex",
+          flexDirection: "column",
+          gap: "12px"
         }}>
-          <span style={{ fontSize: "11px", fontWeight: "700", color: "var(--primary)", backgroundColor: "var(--primary-light)", padding: "4px 8px", borderRadius: "8px" }}>
-            🏢 {selectedPlace.building} · {selectedPlace.floor}
-          </span>
-          <h3 style={{ fontSize: "18px", fontWeight: "900", color: "var(--foreground)", marginTop: "10px" }}>
-            {selectedPlace.name}
-          </h3>
-          <p style={{ fontSize: "12px", color: "var(--text-muted)", marginTop: "4px" }}>
-            📍 {selectedPlace.detailLocation}
-          </p>
+          {selectedPlace.imageUrl && (
+            <div style={{
+              width: "100%",
+              height: "160px",
+              borderRadius: "10px",
+              overflow: "hidden",
+              border: "1px solid var(--border)",
+              backgroundColor: "var(--surface-hover)"
+            }}>
+              <img 
+                src={selectedPlace.imageUrl} 
+                alt={selectedPlace.name} 
+                style={{ width: "100%", height: "100%", objectFit: "cover" }} 
+              />
+            </div>
+          )}
 
-          <div style={{ display: "flex", gap: "4px", marginTop: "10px" }}>
-            {selectedPlace.purposes.map((p) => (
-              <span key={p} style={{ fontSize: "10px", fontWeight: "700", backgroundColor: "var(--surface-hover)", color: "var(--text-muted)", padding: "3px 8px", borderRadius: "6px" }}>
-                {PURPOSE_EMOJIS[p]} {p}
-              </span>
-            ))}
+          <div>
+            <span style={{ fontSize: "11px", fontWeight: "700", color: "var(--primary)", backgroundColor: "var(--primary-light)", padding: "4px 8px", borderRadius: "8px" }}>
+              🏢 {selectedPlace.building} · {selectedPlace.floor}
+            </span>
+            <h3 style={{ fontSize: "18px", fontWeight: "900", color: "var(--foreground)", marginTop: "10px" }}>
+              {selectedPlace.name}
+            </h3>
+            <p style={{ fontSize: "12px", color: "var(--text-muted)", marginTop: "4px" }}>
+              📍 {selectedPlace.detailLocation}
+            </p>
+
+            <div style={{ display: "flex", gap: "4px", marginTop: "12px" }}>
+              {selectedPlace.purposes.map((p) => (
+                <span key={p} style={{ fontSize: "10px", fontWeight: "700", backgroundColor: "var(--surface-hover)", color: "var(--text-muted)", padding: "3px 8px", borderRadius: "6px" }}>
+                  {PURPOSE_EMOJIS[p]} {p}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
 

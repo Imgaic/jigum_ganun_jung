@@ -203,10 +203,11 @@ export default function HomeScreen() {
                 <div
                   key={place.id}
                   onClick={() => {
-                    if (unlockedUntil <= Date.now()) {
-                      handlePromptUnlock();
-                    } else {
+                    const isUnknown = calculateWeightedCrowdLevel(place.history) === 0;
+                    if (isUnknown || unlockedUntil > Date.now()) {
                       router.push(`/detail/${place.id}`);
+                    } else {
+                      handlePromptUnlock();
                     }
                   }}
                   style={{
@@ -215,24 +216,50 @@ export default function HomeScreen() {
                     borderRadius: "var(--radius-sm)",
                     border: "1px solid var(--border)",
                     display: "flex",
-                    flexDirection: "column",
-                    gap: "8px",
+                    gap: "12px",
                     cursor: "pointer",
                     boxShadow: "var(--shadow-sm)",
                     transition: "var(--transition-bounce)"
                   }}
                 >
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                    <div>
-                      <h4 style={{ fontSize: "14px", fontWeight: "800", color: "var(--foreground)" }}>{place.name}</h4>
-                      <p style={{ fontSize: "11px", color: "var(--text-muted)", marginTop: "2px" }}>
-                        {place.detailLocation}
-                      </p>
-                    </div>
-
-                    {/* 공통 CrowdBadge 컴포넌트 마운트 */}
-                    <CrowdBadge place={place} customClick />
+                  {/* 썸네일 이미지 */}
+                  <div style={{
+                    width: "64px",
+                    height: "64px",
+                    borderRadius: "10px",
+                    overflow: "hidden",
+                    backgroundColor: "var(--surface-hover)",
+                    flexShrink: 0,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    border: "1px solid var(--border)",
+                    alignSelf: "center"
+                  }}>
+                    {place.imageUrl ? (
+                      <img 
+                        src={place.imageUrl} 
+                        alt={place.name} 
+                        style={{ width: "100%", height: "100%", objectFit: "cover" }} 
+                      />
+                    ) : (
+                      <span style={{ fontSize: "22px" }}>🏢</span>
+                    )}
                   </div>
+
+                  {/* 텍스트 내용 */}
+                  <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "6px", minWidth: 0 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "8px" }}>
+                      <div style={{ minWidth: 0 }}>
+                        <h4 style={{ fontSize: "14px", fontWeight: "800", color: "var(--foreground)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                          {place.name}
+                        </h4>
+                        <p style={{ fontSize: "11px", color: "var(--text-muted)", marginTop: "2px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                          {place.detailLocation}
+                        </p>
+                      </div>
+                      <CrowdBadge place={place} customClick />
+                    </div>
 
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid var(--border)", paddingTop: "8px", marginTop: "2px" }}>
                     <div style={{ display: "flex", gap: "4px" }}>
@@ -256,6 +283,7 @@ export default function HomeScreen() {
                         {isExpired ? "업데이트 필요 ⚠️" : getRelativeTimeText(place.updatedAt)}
                       </span>
                     </div>
+                  </div>
                   </div>
                 </div>
               );
