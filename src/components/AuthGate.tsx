@@ -142,7 +142,7 @@ export default function AuthGate() {
           lineHeight: "1.6"
         }}>
           <strong style={{ color: "var(--primary)" }}>테스트 계정</strong><br />
-          아이디: <strong>test01</strong> ~ <strong>test10</strong><br />
+          아이디: <strong>test01</strong> ~ <strong>test100</strong><br />
           비밀번호: <strong>cau1234!</strong>
         </div>
       </form>

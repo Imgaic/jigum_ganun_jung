@@ -71,9 +71,9 @@ export default function AppLayoutWrapper({ children }: { children: React.ReactNo
         className="panel-toggle panel-toggle-right"
         onClick={() => setShowUserPanel((prev) => !prev)}
         aria-pressed={showUserPanel}
-        title={showUserPanel ? "우측 유저 패널 숨기기" : "우측 유저 패널 보이기"}
+        title={showUserPanel ? "우측 데이터 패널 숨기기" : "우측 데이터 패널 보이기"}
       >
-        <span>USER</span>
+        <span>DATA</span>
         {showUserPanel ? "›" : "‹"}
       </button>
 
