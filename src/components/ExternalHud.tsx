@@ -14,6 +14,8 @@ interface ExternalHudProps {
   generatedCount: number;
   timeSpeed: number;
   setTimeSpeed: (speed: number) => void;
+  simBias: string;
+  setSimBias: (bias: string) => void;
 }
 
 export default function ExternalHud({
@@ -27,6 +29,8 @@ export default function ExternalHud({
   generatedCount,
   timeSpeed,
   setTimeSpeed,
+  simBias,
+  setSimBias,
 }: ExternalHudProps) {
   return (
     <div className="external-control-hud">
@@ -140,6 +144,40 @@ export default function ExternalHud({
             />
             <span style={{ fontSize: "11.5px", color: "var(--text-muted)", fontWeight: "600" }}>개</span>
           </div>
+        </div>
+
+        {/* 제보 혼잡도 경향 선택 */}
+        <div style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: "8px",
+          marginTop: "6px",
+          borderTop: "1px dashed var(--border)",
+          paddingTop: "8px"
+        }}>
+          <span style={{ fontSize: "11.5px", fontWeight: "800", color: "var(--foreground)" }}>제보 혼잡도 경향:</span>
+          <select
+            value={simBias}
+            onChange={(e) => setSimBias(e.target.value)}
+            style={{
+              padding: "4px 6px",
+              fontSize: "11px",
+              fontWeight: "800",
+              borderRadius: "6px",
+              border: "1px solid var(--border)",
+              backgroundColor: "var(--background)",
+              color: "var(--foreground)",
+              cursor: "pointer",
+              outline: "none"
+            }}
+          >
+            <option value="random">🎲 균등 랜덤</option>
+            <option value="low">🌱 한산함 위주</option>
+            <option value="high">🔥 혼잡함 위주</option>
+            <option value="fixed-1">🔒 매우 한산 고정</option>
+            <option value="fixed-5">🔒 매우 혼잡 고정</option>
+          </select>
         </div>
 
         <button

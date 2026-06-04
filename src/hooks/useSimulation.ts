@@ -15,7 +15,8 @@ import { useUserContext } from "../context/UserContext";
 export function useSimulation(
   places: Place[],
   setPlaces: React.Dispatch<React.SetStateAction<Place[]>>,
-  targetCount: number
+  targetCount: number,
+  simBias: string = "random"
 ) {
   const [isSimulating, setIsSimulating] = useState<boolean>(false);
   const [simLogs, setSimLogs] = useState<string[]>([]);
@@ -33,6 +34,12 @@ export function useSimulation(
   useEffect(() => {
     isSimulatingRef.current = isSimulating;
   }, [isSimulating]);
+
+  // 가중치 상태 실시간 반영 가드 Ref
+  const simBiasRef = useRef(simBias);
+  useEffect(() => {
+    simBiasRef.current = simBias;
+  }, [simBias]);
 
   const startSimulation = (value: SetStateAction<boolean>) => {
     const nextValue = typeof value === "function" ? value(isSimulating) : value;
@@ -59,8 +66,8 @@ export function useSimulation(
       const randomIdx = Math.floor(Math.random() * currentPlaces.length);
       const targetPlace = currentPlaces[randomIdx];
 
-      // 2. 1~5 단계 중 무작위 혼잡도 선택
-      const randomCrowd = (Math.floor(Math.random() * 5) + 1) as 1 | 2 | 3 | 4 | 5;
+      // 2. 가중치 설정에 따른 혼잡도 선택
+      const randomCrowd = getBiasedCrowd(simBiasRef.current);
 
       // 3. seedStore의 랜덤 유저 선택
       const users = seedData.users;
@@ -139,4 +146,37 @@ export function useSimulation(
     setSimLogs,
     generatedCount,
   };
+}
+
+/**
+ * 설정된 경향성(Bias)에 따라 가중치 난수를 적용하여 1~5단계 혼잡도를 반환합니다.
+ */
+function getBiasedCrowd(simBias: string): 1 | 2 | 3 | 4 | 5 {
+  const rand = Math.random() * 100; // 0 ~ 100 난수
+
+  switch (simBias) {
+    case "low": // 한산함 위주: 1단계(40%), 2단계(30%), 3단계(15%), 4단계(10%), 5단계(5%)
+      if (rand < 40) return 1;
+      if (rand < 70) return 2;
+      if (rand < 85) return 3;
+      if (rand < 95) return 4;
+      return 5;
+    case "high": // 혼잡함 위주: 5단계(40%), 4단계(30%), 3단계(15%), 2단계(10%), 1단계(5%)
+      if (rand < 40) return 5;
+      if (rand < 70) return 4;
+      if (rand < 85) return 3;
+      if (rand < 95) return 2;
+      return 1;
+    case "fixed-1": // 매우 한산 고정
+      return 1;
+    case "fixed-5": // 매우 혼잡 고정
+      return 5;
+    case "random":
+    default: // 균등 랜덤
+      if (rand < 20) return 1;
+      if (rand < 40) return 2;
+      if (rand < 60) return 3;
+      if (rand < 80) return 4;
+      return 5;
+  }
 }

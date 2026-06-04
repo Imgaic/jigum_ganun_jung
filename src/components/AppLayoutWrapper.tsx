@@ -22,7 +22,9 @@ export default function AppLayoutWrapper({ children }: { children: React.ReactNo
     simLogs,
     targetCount,
     setTargetCount,
-    generatedCount
+    generatedCount,
+    simBias,
+    setSimBias
   } = usePlacesContext();
   const {
     userPoints,
@@ -92,6 +94,8 @@ export default function AppLayoutWrapper({ children }: { children: React.ReactNo
           generatedCount={generatedCount}
           timeSpeed={timeSpeed}
           setTimeSpeed={setTimeSpeed}
+          simBias={simBias}
+          setSimBias={setSimBias}
         />
       )}
 

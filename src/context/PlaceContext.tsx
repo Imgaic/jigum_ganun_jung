@@ -13,6 +13,8 @@ interface PlaceContextType {
   targetCount: number;
   setTargetCount: React.Dispatch<React.SetStateAction<number>>;
   generatedCount: number;
+  simBias: string;
+  setSimBias: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const PlaceContext = createContext<PlaceContextType | undefined>(undefined);
@@ -20,9 +22,10 @@ const PlaceContext = createContext<PlaceContextType | undefined>(undefined);
 export function PlaceProvider({ children }: { children: React.ReactNode }) {
   const [places, setPlaces] = useState<Place[]>(() => INITIAL_PLACES());
   const [targetCount, setTargetCount] = useState<number>(30); // 기본 제보 생성 개수: 30개
+  const [simBias, setSimBias] = useState<string>("random");
 
   // 시뮬레이터 훅 주입 연동
-  const { isSimulating, setIsSimulating, simLogs, generatedCount } = useSimulation(places, setPlaces, targetCount);
+  const { isSimulating, setIsSimulating, simLogs, generatedCount } = useSimulation(places, setPlaces, targetCount, simBias);
 
   return (
     <PlaceContext.Provider value={{
@@ -33,7 +36,9 @@ export function PlaceProvider({ children }: { children: React.ReactNode }) {
       simLogs,
       targetCount,
       setTargetCount,
-      generatedCount
+      generatedCount,
+      simBias,
+      setSimBias
     }}>
       {children}
     </PlaceContext.Provider>
