@@ -34,8 +34,24 @@ function getRankAccent(entry: UserDirectoryEntry) {
 }
 
 export default function UserDirectoryPanel() {
-  const { currentUser, userDirectory, refreshUserDirectory } = useUserContext();
+  const { currentUser, userDirectory, refreshUserDirectory, switchUser } = useUserContext();
+  const [switchingUserId, setSwitchingUserId] = React.useState<number | null>(null);
+  const [switchError, setSwitchError] = React.useState<string>("");
   const topUser = userDirectory[0];
+
+  const handleSwitchUser = async (entry: UserDirectoryEntry) => {
+    if (entry.isCurrentUser || switchingUserId) return;
+
+    setSwitchError("");
+    setSwitchingUserId(entry.id);
+
+    const result = await switchUser(entry.id);
+    if (!result.ok) {
+      setSwitchError(result.message || "유저 전환 중 문제가 발생했습니다.");
+    }
+
+    setSwitchingUserId(null);
+  };
 
   return (
     <aside className="external-user-panel">
@@ -118,6 +134,11 @@ export default function UserDirectoryPanel() {
           <strong style={{ fontSize: "12px", color: "var(--foreground)", fontWeight: 900 }}>
             {currentUser ? `${currentUser.nickname} · @${currentUser.username}` : "로그인 정보 없음"}
           </strong>
+          {switchError && (
+            <span style={{ fontSize: "10px", color: "var(--accent)", fontWeight: 800 }}>
+              {switchError}
+            </span>
+          )}
         </div>
 
         <div style={{ paddingBottom: "2px" }}>
@@ -137,49 +158,67 @@ export default function UserDirectoryPanel() {
               </tr>
             </thead>
             <tbody>
-              {userDirectory.map((entry) => (
-                <tr
-                  key={entry.id}
-                  style={{
-                    backgroundColor: entry.isCurrentUser ? "var(--primary-light)" : "var(--surface)",
-                    boxShadow: entry.isCurrentUser ? "0 0 0 1px var(--primary)" : "0 0 0 1px var(--border)",
-                  }}
-                >
-                  <td style={{
-                    ...cellStyle,
-                    width: "42px",
-                    borderTopLeftRadius: "8px",
-                    borderBottomLeftRadius: "8px",
-                    color: getRankAccent(entry),
-                  }}>
-                    #{entry.rank}
-                  </td>
-                  <td style={{ ...cellStyle, whiteSpace: "normal" }}>
-                    <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-                      <span style={{ fontSize: "11.5px", fontWeight: 900 }}>
-                        {entry.nickname}{entry.isCurrentUser ? " · 나" : ""}
-                      </span>
-                      <span style={{ fontSize: "10px", color: "var(--text-muted)", fontWeight: 750 }}>
-                        @{entry.username}
-                      </span>
-                      <span style={{ fontSize: "9.5px", color: "var(--text-muted)", fontWeight: 700 }}>
-                        신뢰 {entry.trustScore} · 로그인 {formatDateTime(entry.lastLoginAt)}
-                      </span>
-                    </div>
-                  </td>
-                  <td style={{ ...cellStyle, textAlign: "right" }}>{entry.points}P</td>
-                  <td style={{ ...cellStyle, textAlign: "right" }}>{entry.reportCount}</td>
-                  <td style={{
-                    ...cellStyle,
-                    textAlign: "right",
-                    color: "var(--primary)",
-                    borderTopRightRadius: "8px",
-                    borderBottomRightRadius: "8px",
-                  }}>
-                    {entry.score}
-                  </td>
-                </tr>
-              ))}
+              {userDirectory.map((entry) => {
+                const isSwitching = switchingUserId === entry.id;
+                const isDisabled = entry.isCurrentUser || switchingUserId !== null;
+
+                return (
+                  <tr
+                    key={entry.id}
+                    role={entry.isCurrentUser ? undefined : "button"}
+                    tabIndex={entry.isCurrentUser ? undefined : 0}
+                    aria-label={entry.isCurrentUser ? undefined : `${entry.nickname} 유저로 전환`}
+                    onClick={() => void handleSwitchUser(entry)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        void handleSwitchUser(entry);
+                      }
+                    }}
+                    style={{
+                      backgroundColor: entry.isCurrentUser ? "var(--primary-light)" : "var(--surface)",
+                      boxShadow: entry.isCurrentUser ? "0 0 0 1px var(--primary)" : "0 0 0 1px var(--border)",
+                      cursor: isDisabled ? "default" : "pointer",
+                      opacity: isSwitching ? 0.72 : 1,
+                      transition: "var(--transition-smooth)",
+                    }}
+                  >
+                    <td style={{
+                      ...cellStyle,
+                      width: "42px",
+                      borderTopLeftRadius: "8px",
+                      borderBottomLeftRadius: "8px",
+                      color: getRankAccent(entry),
+                    }}>
+                      #{entry.rank}
+                    </td>
+                    <td style={{ ...cellStyle, whiteSpace: "normal" }}>
+                      <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+                        <span style={{ fontSize: "11.5px", fontWeight: 900 }}>
+                          {entry.nickname}{entry.isCurrentUser ? " · 나" : isSwitching ? " · 전환 중" : ""}
+                        </span>
+                        <span style={{ fontSize: "10px", color: "var(--text-muted)", fontWeight: 750 }}>
+                          @{entry.username}
+                        </span>
+                        <span style={{ fontSize: "9.5px", color: "var(--text-muted)", fontWeight: 700 }}>
+                          신뢰 {entry.trustScore} · 로그인 {formatDateTime(entry.lastLoginAt)}
+                        </span>
+                      </div>
+                    </td>
+                    <td style={{ ...cellStyle, textAlign: "right" }}>{entry.points}P</td>
+                    <td style={{ ...cellStyle, textAlign: "right" }}>{entry.reportCount}</td>
+                    <td style={{
+                      ...cellStyle,
+                      textAlign: "right",
+                      color: "var(--primary)",
+                      borderTopRightRadius: "8px",
+                      borderBottomRightRadius: "8px",
+                    }}>
+                      {entry.score}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
 

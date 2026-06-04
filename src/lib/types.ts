@@ -32,8 +32,3 @@ export interface UserDirectoryEntry {
   lastLoginAt: string | null;
   isCurrentUser: boolean;
 }
-
-export interface SessionPayload {
-  userId: number;
-  username: string;
-}

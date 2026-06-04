@@ -23,6 +23,8 @@
 # local app data
 /data/*.sqlite
 /data/*.sqlite-*
+/data/*.json
+/data/*.json.tmp
 
 # misc
 .DS_Store

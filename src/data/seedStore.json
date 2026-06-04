@@ -1,0 +1,124 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "test01",
+      "password": "cau1234!",
+      "nickname": "중앙도서관러",
+      "points": 650,
+      "reportCount": 42,
+      "trustScore": 97,
+      "createdAt": "2026-05-28T05:30:18.000Z",
+      "lastLoginAt": "2026-06-04T04:26:18.000Z"
+    },
+    {
+      "id": 2,
+      "username": "test02",
+      "password": "cau1234!",
+      "nickname": "310관지킴이",
+      "points": 560,
+      "reportCount": 38,
+      "trustScore": 91,
+      "createdAt": "2026-05-28T05:30:18.000Z",
+      "lastLoginAt": "2026-06-04T04:26:28.000Z"
+    },
+    {
+      "id": 3,
+      "username": "test03",
+      "password": "cau1234!",
+      "nickname": "공강탐험가",
+      "points": 510,
+      "reportCount": 33,
+      "trustScore": 88,
+      "createdAt": "2026-05-28T05:30:18.000Z",
+      "lastLoginAt": "2026-06-04T04:26:27.000Z"
+    },
+    {
+      "id": 4,
+      "username": "test04",
+      "password": "cau1234!",
+      "nickname": "학식레이더",
+      "points": 470,
+      "reportCount": 31,
+      "trustScore": 84,
+      "createdAt": "2026-05-28T05:30:18.000Z",
+      "lastLoginAt": "2026-06-04T04:26:26.000Z"
+    },
+    {
+      "id": 5,
+      "username": "test05",
+      "password": "cau1234!",
+      "nickname": "서라벌스팟터",
+      "points": 430,
+      "reportCount": 27,
+      "trustScore": 82,
+      "createdAt": "2026-05-28T05:30:18.000Z",
+      "lastLoginAt": "2026-06-04T04:26:23.000Z"
+    },
+    {
+      "id": 6,
+      "username": "test06",
+      "password": "cau1234!",
+      "nickname": "라운지요정",
+      "points": 390,
+      "reportCount": 24,
+      "trustScore": 79,
+      "createdAt": "2026-05-28T05:30:18.000Z",
+      "lastLoginAt": "2026-06-04T04:26:23.000Z"
+    },
+    {
+      "id": 7,
+      "username": "test07",
+      "password": "cau1234!",
+      "nickname": "혼잡도분석가",
+      "points": 350,
+      "reportCount": 22,
+      "trustScore": 75,
+      "createdAt": "2026-05-28T05:30:18.000Z",
+      "lastLoginAt": "2026-06-04T04:26:22.000Z"
+    },
+    {
+      "id": 8,
+      "username": "test08",
+      "password": "cau1234!",
+      "nickname": "카페인충전소",
+      "points": 300,
+      "reportCount": 18,
+      "trustScore": 72,
+      "createdAt": "2026-05-28T05:30:18.000Z",
+      "lastLoginAt": null
+    },
+    {
+      "id": 9,
+      "username": "test09",
+      "password": "cau1234!",
+      "nickname": "휴식공간찾기",
+      "points": 260,
+      "reportCount": 15,
+      "trustScore": 70,
+      "createdAt": "2026-05-28T05:30:18.000Z",
+      "lastLoginAt": null
+    },
+    {
+      "id": 10,
+      "username": "test10",
+      "password": "cau1234!",
+      "nickname": "새내기제보단",
+      "points": 210,
+      "reportCount": 12,
+      "trustScore": 66,
+      "createdAt": "2026-05-28T05:30:18.000Z",
+      "lastLoginAt": null
+    }
+  ],
+  "reports": [
+    {
+      "id": 1,
+      "userId": 1,
+      "placeId": 1,
+      "crowdLevel": 3,
+      "durationMinutes": 30,
+      "createdAt": "2026-06-04T03:16:02.000Z"
+    }
+  ]
+}

@@ -13,12 +13,19 @@ npm run dev
 
 ## 로그인 테스트 계정
 
-앱 시작 전 로그인 화면이 먼저 표시됩니다. 개발용 SQLite DB는 첫 API 호출 시 `data/jigum_ganun_jung.sqlite`에 생성되며, 아래 테스트 계정 10개가 자동 등록됩니다.
+앱 시작 전 로그인 화면이 먼저 표시됩니다. 초기 유저 데이터는 읽기 전용 seed 파일인 `src/data/seedStore.json`에서 불러옵니다.
 
 - 아이디: `test01` ~ `test10`
 - 비밀번호: `cau1234!`
 
-회원가입으로 새 계정을 만들 수도 있습니다. 비밀번호는 bcrypt hash로 저장되고, 로그인 세션은 HTTP-only 쿠키 JWT로 유지됩니다.
+회원가입으로 새 계정을 만들 수도 있습니다. 가입, 제보, 포인트, 랭킹, 유저 스위칭 변화는 브라우저 세션 메모리에만 반영됩니다.
+
+## 데이터 동작
+
+- `src/data/seedStore.json`은 초기 데이터 전용이며 앱에서 쓰지 않습니다.
+- 클라이언트 새로고침 시 유저/랭킹/제보 데이터는 seed 기준으로 리셋됩니다.
+- 로그아웃은 인증 상태만 바꾸며, 같은 페이지 세션 안의 유저/랭킹 변화는 유지됩니다.
+- 별도 서버 DB, Blob, Postgres 없이 Vercel에 배포할 수 있는 프로토타입 구조입니다.
 
 ## 랭킹 공식
 
@@ -29,16 +36,6 @@ npm run dev
 ```
 
 동점이면 제보수, 포인트, 닉네임 순으로 정렬합니다.
-
-## 주요 API
-
-- `POST /api/auth/signup`
-- `POST /api/auth/login`
-- `POST /api/auth/logout`
-- `GET /api/auth/me`
-- `POST /api/reports`
-- `GET /api/rankings`
-- `GET /api/users`
 
 ## 검증
 
