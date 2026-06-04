@@ -1,6 +1,7 @@
 // ==========================================
 // Types & Interfaces
 // ==========================================
+import { VR_IMAGES_MAPPING } from "../constants/vrImages";
 export interface PlaceHistory {
   crowdLevel: number;
   time: string;
@@ -202,8 +203,42 @@ export const INITIAL_PLACES = (): Place[] => {
       reportsCount: 0,
       history: [],
       imageUrl: "/images/310/310_1f_icreator_square.jpeg",
+    },
+    {
+      id: 15,
+      building: "310관",
+      floor: "지하 4층",
+      name: "310관 지하 4층 카우버거",
+      detailLocation: "310관 지하 4층 푸드코트 내부",
+      purposes: ["식사"],
+      crowdLevel: 0,
+      updatedAt: 0,
+      reportsCount: 0,
+      history: [],
+      imageUrl: "/images/310/310_b4_cau_burger.jpeg",
+    },
+    {
+      id: 16,
+      building: "102관",
+      floor: "11층",
+      name: "102관 11층 크리에이티브 홀",
+      detailLocation: "102관 11층 엘리베이터 앞 라운지",
+      purposes: ["공부", "휴식", "대화"],
+      crowdLevel: 0,
+      updatedAt: 0,
+      reportsCount: 0,
+      history: [],
+      imageUrl: "/images/102/102_11f_creative_lounge.png",
     }
   ];
+
+  return places.map(place => {
+    const mapping = VR_IMAGES_MAPPING.find(m => m.id === place.id);
+    return {
+      ...place,
+      imageUrl: mapping ? mapping.imageUrl : place.imageUrl
+    };
+  });
 };
 
 // Emojis for purposes

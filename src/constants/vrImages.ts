@@ -49,7 +49,7 @@ export const VR_IMAGES_MAPPING: VRPlaceImage[] = [
     name: "중앙도서관 2층 제1열람실",
     sceneId: "N/A",
     sceneName: "실제 현장 사진 (중앙도서관 2층 제1열람실)",
-    imageUrl: "/images/204/204_reading_room_2.png",
+    imageUrl: "/images/204/204_reading_room_1.jpg",
     isPlaceholder: false
   },
   {
@@ -154,6 +154,26 @@ export const VR_IMAGES_MAPPING: VRPlaceImage[] = [
     sceneId: "N/A",
     sceneName: "실제 현장 사진 (308관 1층 로비라운지)",
     imageUrl: "/images/308/308_1f_lobby_lounge.png",
+    isPlaceholder: false
+  },
+  {
+    id: 15,
+    building: "310관",
+    floor: "지하 4층",
+    name: "310관 지하 4층 카우버거",
+    sceneId: "N/A",
+    sceneName: "실제 현장 사진 (310관 B4 카우버거)",
+    imageUrl: "/images/310/310_b4_cau_burger.jpeg",
+    isPlaceholder: false
+  },
+  {
+    id: 16,
+    building: "102관",
+    floor: "11층",
+    name: "102관 11층 크리에이티브 홀",
+    sceneId: "N/A",
+    sceneName: "실제 현장 사진 (102관 11층 크리에이티브 홀)",
+    imageUrl: "/images/102/102_11f_creative_lounge.png",
     isPlaceholder: false
   }
 ];
