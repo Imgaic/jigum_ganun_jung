@@ -114,7 +114,7 @@ export default function HomeScreen() {
             }}
           >
             <span style={{ fontSize: "12px", fontWeight: "800", color: "var(--accent)" }}>
-              🔒 실시간 정보 잠김 (10P 소모)
+              🔓 실시간 혼잡도 열람 모드 활성화 (10P 소모)
             </span>
             <span style={{ fontSize: "11px", fontWeight: "900", color: "white", backgroundColor: "var(--accent)", padding: "2.5px 8px", borderRadius: "10px" }}>
               활성화
@@ -261,29 +261,29 @@ export default function HomeScreen() {
                       <CrowdBadge place={place} customClick />
                     </div>
 
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid var(--border)", paddingTop: "8px", marginTop: "2px" }}>
-                    <div style={{ display: "flex", gap: "4px" }}>
-                      {place.purposes.map((p) => (
-                        <span key={p} style={{
-                          fontSize: "9.5px",
-                          fontWeight: "700",
-                          backgroundColor: "var(--surface-hover)",
-                          color: "var(--text-muted)",
-                          padding: "2.5px 6px",
-                          borderRadius: "6px"
-                        }}>
-                          {PURPOSE_EMOJIS[p] || ""} {p}
-                        </span>
-                      ))}
-                    </div>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid var(--border)", paddingTop: "8px", marginTop: "2px" }}>
+                      <div style={{ display: "flex", gap: "4px" }}>
+                        {place.purposes.map((p) => (
+                          <span key={p} style={{
+                            fontSize: "9.5px",
+                            fontWeight: "700",
+                            backgroundColor: "var(--surface-hover)",
+                            color: "var(--text-muted)",
+                            padding: "2.5px 6px",
+                            borderRadius: "6px"
+                          }}>
+                            {PURPOSE_EMOJIS[p] || ""} {p}
+                          </span>
+                        ))}
+                      </div>
 
-                    <div style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "10.5px", fontWeight: "600", color: isExpired ? "var(--accent)" : "var(--text-muted)" }}>
-                      <ClockIcon size={12} />
-                      <span>
-                        {isExpired ? "업데이트 필요 ⚠️" : getRelativeTimeText(place.updatedAt, nowMs)}
-                      </span>
+                      <div style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "10.5px", fontWeight: "600", color: isExpired ? "var(--accent)" : "var(--text-muted)" }}>
+                        <ClockIcon size={12} />
+                        <span>
+                          {isExpired ? "업데이트 필요 ⚠️" : getRelativeTimeText(place.updatedAt, nowMs)}
+                        </span>
+                      </div>
                     </div>
-                  </div>
                   </div>
                 </div>
               );
@@ -317,12 +317,7 @@ export default function HomeScreen() {
           }}
         >
           <MapPinIcon size={18} />
-          <span>지금 내 위치 현장 제보하기 (+{potentialReward}P)</span>
-          {potentialReward === 30 && (
-            <span style={{ fontSize: "10px", fontWeight: "800", backgroundColor: "white", color: "var(--accent)", padding: "1.5px 5px", borderRadius: "6px", marginLeft: "4px" }}>
-              공백 복구 특별 보상! 🔥
-            </span>
-          )}
+          <span>지금 내 위치 현장 제보하기 ({potentialReward}P)</span>
         </button>
       </div>
     </div>

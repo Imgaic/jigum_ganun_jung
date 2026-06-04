@@ -49,7 +49,7 @@ export default function UnlockModal({
           실시간 혼잡도 열람 활성화
         </h3>
         <p style={{ fontSize: "12px", color: "var(--text-muted)", lineHeight: "1.5" }}>
-          <strong>10포인트</strong>를 소모하여 <strong>3분간</strong> 교내 전체 공간의 실시간 혼잡도 데이터를 열람할 수 있습니다.
+          <strong>10포인트</strong>를 소모하여 <strong>5분간</strong> 교내 전체 공간의 실시간 혼잡도 데이터를 열람할 수 있습니다.
         </p>
         <div style={{
           backgroundColor: "var(--background)",

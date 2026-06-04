@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import type { SetStateAction } from "react";
 import { Place } from "../types";
 import { getCrowdLevelInfo } from "../utils/crowdAnalyzer";
 import { getVirtualNow, formatVirtualTime, formatVirtualTimeWithSec } from "../utils/timeSpeed";
 import seedData from "../data/seedStore.json";
+import { useUserContext } from "../context/UserContext";
 
 /**
  * 백그라운드 가상 학생 제보 시뮬레이션 엔진을 관리하는 커스텀 훅입니다.
@@ -19,6 +20,19 @@ export function useSimulation(
   const [isSimulating, setIsSimulating] = useState<boolean>(false);
   const [simLogs, setSimLogs] = useState<string[]>([]);
   const [generatedCount, setGeneratedCount] = useState<number>(0);
+  const { syncVirtualReportWithUser } = useUserContext();
+
+  // 최신 places 상태를 렌더러 리셋 없이 안전하게 참조하기 위한 Ref
+  const placesRef = useRef(places);
+  useEffect(() => {
+    placesRef.current = places;
+  }, [places]);
+
+  // 비동기 타이머 콜백 안에서 최신 시뮬레이션 상태를 참조하여 좀비 루프를 방지하기 위한 Ref
+  const isSimulatingRef = useRef(isSimulating);
+  useEffect(() => {
+    isSimulatingRef.current = isSimulating;
+  }, [isSimulating]);
 
   const startSimulation = (value: SetStateAction<boolean>) => {
     const nextValue = typeof value === "function" ? value(isSimulating) : value;
@@ -30,15 +44,20 @@ export function useSimulation(
 
   // 백그라운드 제보 생성 타이머 루프
   useEffect(() => {
-    if (!isSimulating || places.length === 0) return;
+    if (!isSimulating || placesRef.current.length === 0) return;
 
     let activeTimer: NodeJS.Timeout;
     let currentGenerated = 0;
 
     const triggerSimulationReport = () => {
+      // 좀비 타이머 방어 가드: 비동기 실행 시점에 시뮬레이션 스위치가 꺼져있다면 즉시 루프 탈출
+      if (!isSimulatingRef.current) return;
+
+      const currentPlaces = placesRef.current;
+
       // 1. 임의의 장소 선택
-      const randomIdx = Math.floor(Math.random() * places.length);
-      const targetPlace = places[randomIdx];
+      const randomIdx = Math.floor(Math.random() * currentPlaces.length);
+      const targetPlace = currentPlaces[randomIdx];
 
       // 2. 1~5 단계 중 무작위 혼잡도 선택
       const randomCrowd = (Math.floor(Math.random() * 5) + 1) as 1 | 2 | 3 | 4 | 5;
@@ -76,6 +95,9 @@ export function useSimulation(
         })
       );
 
+      // 가상 유저의 실시간 포인트 및 제보 횟수 연동 갱신 (제보 보상: 10P)
+      syncVirtualReportWithUser(fakeReporter, 10);
+
       // 5. 외부 HUD용 디버그 로그 추가
       const timeSecStr = formatVirtualTimeWithSec(vNow);
       const crowdLabel = getCrowdLevelInfo(randomCrowd).label;
@@ -105,8 +127,10 @@ export function useSimulation(
     const firstDelay = 200;
     activeTimer = setTimeout(triggerSimulationReport, firstDelay);
 
-    return () => clearTimeout(activeTimer);
-  }, [isSimulating, places, setPlaces, targetCount]);
+    return () => {
+      clearTimeout(activeTimer);
+    };
+  }, [isSimulating, setPlaces, targetCount]);
 
   return {
     isSimulating,

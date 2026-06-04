@@ -1,30 +1,33 @@
 :root {
   /* HSL Color System - Light & Energetic */
-  --primary-hue: 156; /* Emerald/Lime Green representing movement and safety */
+  --primary-hue: 156;
+  /* Emerald/Lime Green representing movement and safety */
   --primary: hsl(var(--primary-hue), 85%, 40%);
   --primary-hover: hsl(var(--primary-hue), 85%, 33%);
   --primary-light: hsl(var(--primary-hue), 80%, 95%);
   --primary-glow: hsla(var(--primary-hue), 85%, 40%, 0.15);
-  
-  --secondary: hsl(230, 85%, 60%); /* Modern Cobalt Blue representing destination/tech */
-  --accent: hsl(15, 95%, 55%); /* Bright Coral for highlights/alerts */
-  
+
+  --secondary: hsl(230, 85%, 60%);
+  /* Modern Cobalt Blue representing destination/tech */
+  --accent: hsl(15, 95%, 55%);
+  /* Bright Coral for highlights/alerts */
+
   --background: hsl(210, 20%, 98%);
   --surface: hsl(0, 0%, 100%);
   --surface-hover: hsl(210, 20%, 96%);
   --border: hsl(210, 14%, 90%);
-  
+
   --foreground: hsl(220, 40%, 12%);
   --text-muted: hsl(220, 15%, 45%);
-  
+
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
   --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
   --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.12);
-  
+
   --radius-sm: 12px;
   --radius-md: 18px;
   --radius-lg: 28px;
-  
+
   --font-family: var(--font-noto-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-bounce: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -36,13 +39,13 @@
     --surface: hsl(220, 20%, 12%);
     --surface-hover: hsl(220, 20%, 16%);
     --border: hsl(220, 15%, 18%);
-    
+
     --foreground: hsl(210, 20%, 95%);
     --text-muted: hsl(218, 12%, 65%);
-    
+
     --primary-light: hsl(var(--primary-hue), 50%, 15%);
     --primary-glow: hsla(var(--primary-hue), 85%, 40%, 0.3);
-    
+
     --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
     --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.3);
     --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.4);
@@ -56,13 +59,15 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-html, body {
+html,
+body {
   width: 100%;
   height: 100%;
   background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-family);
-  overflow: hidden; /* Prevent body scrolling - scroll inside the mobile container */
+  overflow: hidden;
+  /* Prevent body scrolling - scroll inside the mobile container */
 }
 
 /* PC Mockup Layout & Responsive Setup --- */
@@ -73,7 +78,8 @@ html, body {
   width: 100vw;
   height: 100vh;
   background: radial-gradient(circle at top left, hsl(230, 40%, 10%), hsl(220, 30%, 5%));
-  gap: 30px; /* Space between external HUD and phone frame */
+  gap: 30px;
+  /* Space between external HUD and phone frame */
   padding: 20px;
 }
 
@@ -94,9 +100,12 @@ html, body {
   flex-shrink: 0;
   z-index: 1002;
   animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  max-height: calc(100vh - 40px); /* Prevent cutoff on small viewports */
-  overflow-y: auto;               /* Enable scrolling inside HUD */
-  padding-right: 6px;             /* Space for scrollbar */
+  max-height: calc(100vh - 40px);
+  /* Prevent cutoff on small viewports */
+  overflow-y: auto;
+  /* Enable scrolling inside HUD */
+  padding-right: 6px;
+  /* Space for scrollbar */
 }
 
 .external-user-panel {
@@ -159,16 +168,19 @@ html, body {
 .external-user-panel::-webkit-scrollbar {
   width: 5px;
 }
+
 .external-control-hud::-webkit-scrollbar-track,
 .external-user-panel::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 0.03);
   border-radius: 10px;
 }
+
 .external-control-hud::-webkit-scrollbar-thumb,
 .external-user-panel::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.15);
   border-radius: 10px;
 }
+
 .external-control-hud::-webkit-scrollbar-thumb:hover,
 .external-user-panel::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.3);
@@ -176,7 +188,8 @@ html, body {
 
 @media (max-width: 1024px) {
   .external-control-hud {
-    display: none; /* Hide on mobile/tablet viewports to keep smartphone screen layout 100% clean */
+    display: none;
+    /* Hide on mobile/tablet viewports to keep smartphone screen layout 100% clean */
   }
 
   .panel-toggle-left {
@@ -197,13 +210,17 @@ html, body {
 /* Realistic Mobile Frame on Desktop, Hidden on Mobile */
 .device-frame {
   position: relative;
-  width: 390px; /* Fixed to exact iPhone 12 Pro viewport width */
-  height: 844px; /* Fixed to exact iPhone 12 Pro viewport height */
+  width: 390px;
+  /* Fixed to exact iPhone 12 Pro viewport width */
+  height: 844px;
+  /* Fixed to exact iPhone 12 Pro viewport height */
   background-color: var(--background);
   border-radius: 48px;
-  box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.6), 
-              0 0 0 12px hsl(220, 20%, 15%), /* Inner black bezel */
-              0 0 0 13px hsl(220, 10%, 25%); /* Outer metal rim */
+  box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.6),
+    0 0 0 12px hsl(220, 20%, 15%),
+    /* Inner black bezel */
+    0 0 0 13px hsl(220, 10%, 25%);
+  /* Outer metal rim */
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -217,18 +234,21 @@ html, body {
     transform-origin: center center;
   }
 }
+
 @media (min-width: 768px) and (max-height: 820px) {
   .device-frame {
     transform: scale(0.8);
     transform-origin: center center;
   }
 }
+
 @media (min-width: 768px) and (max-height: 730px) {
   .device-frame {
     transform: scale(0.7);
     transform-origin: center center;
   }
 }
+
 @media (min-width: 768px) and (max-height: 640px) {
   .device-frame {
     transform: scale(0.6);
@@ -276,9 +296,11 @@ html, body {
     box-shadow: none;
     border: none;
   }
+
   .device-frame::before,
   .device-frame::after {
-    display: none; /* Hide hardware details on actual phones */
+    display: none;
+    /* Hide hardware details on actual phones */
   }
 }
 
@@ -291,11 +313,13 @@ html, body {
   overflow-y: auto;
   overflow-x: hidden;
   position: relative;
-  scrollbar-width: none; /* Firefox */
+  scrollbar-width: none;
+  /* Firefox */
 }
 
 .phone-screen::-webkit-scrollbar {
-  display: none; /* Chrome/Safari */
+  display: none;
+  /* Chrome/Safari */
 }
 
 /* --- Premium Utilities & Components --- */
@@ -323,9 +347,11 @@ html, body {
   width: 100%;
   background-color: transparent;
 }
+
 @media (max-width: 767px) {
   .status-bar-spacer {
-    height: 20px; /* Standard web container offset */
+    height: 20px;
+    /* Standard web container offset */
   }
 }
 
@@ -377,9 +403,11 @@ html, body {
   0% {
     box-shadow: 0 0 0 0 hsla(var(--primary-hue), 85%, 40%, 0.4);
   }
+
   70% {
     box-shadow: 0 0 0 12px hsla(var(--primary-hue), 85%, 40%, 0);
   }
+
   100% {
     box-shadow: 0 0 0 0 hsla(var(--primary-hue), 85%, 40%, 0);
   }
@@ -398,6 +426,7 @@ html, body {
     transform: translateY(20px);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
@@ -410,12 +439,25 @@ html, body {
 
 /* --- AI Loading Animations --- */
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes blink {
-  0% { opacity: 0.2; }
-  20% { opacity: 1; }
-  100% { opacity: 0.2; }
+  0% {
+    opacity: 0.2;
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.2;
+  }
 }

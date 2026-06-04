@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeftIcon, SendIcon } from "../Icons";
 import { useChatContext } from "../../context/ChatContext";
 import { useUserContext } from "../../context/UserContext";
+import { usePlacesContext } from "../../context/PlaceContext";
 import CrowdBadge from "../CrowdBadge";
 import { calculateWeightedCrowdLevel } from "../../utils/crowdAnalyzer";
 
@@ -14,6 +15,19 @@ export default function ChatbotScreen() {
   // 대화 및 유저 포인트 전역 Context 참조
   const { chatMessages, handleSendChatMessage, isGenerating } = useChatContext();
   const { unlockedUntil, handlePromptUnlock, nowMs } = useUserContext();
+  const { places } = usePlacesContext();
+
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  // 새 메세지가 수신되거나 AI 로더가 켜질 때 부드럽게 스크롤을 하단으로 이동
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTo({
+        top: scrollRef.current.scrollHeight,
+        behavior: "smooth"
+      });
+    }
+  }, [chatMessages, isGenerating]);
 
   // 입력창 텍스트 상태 격리 (전역에서 페이지 로컬 상태로 하향화 완료!)
   const [chatInput, setChatInput] = useState<string>("");
@@ -40,7 +54,7 @@ export default function ChatbotScreen() {
           <ArrowLeftIcon />
         </button>
         <div>
-          <h2 style={{ fontSize: "16px", fontWeight: "900" }}>AI 장소 추천 챗봇</h2>
+          <h2 style={{ fontSize: "16px", fontWeight: "900" }}>실시간 장소 추천 AI</h2>
           <span style={{ fontSize: "10px", color: "var(--text-muted)" }}>실시간 혼잡도 분석 매핑</span>
         </div>
       </header>
@@ -76,14 +90,17 @@ export default function ChatbotScreen() {
       </div>
 
       {/* 채팅 메세지 스레드 영역 */}
-      <div style={{
-        flex: 1,
-        padding: "10px 16px",
-        overflowY: "auto",
-        display: "flex",
-        flexDirection: "column",
-        gap: "14px"
-      }}>
+      <div
+        ref={scrollRef}
+        style={{
+          flex: 1,
+          padding: "10px 16px",
+          overflowY: "auto",
+          display: "flex",
+          flexDirection: "column",
+          gap: "14px"
+        }}
+      >
         {chatMessages.map((msg) => (
           <div
             key={msg.id}
@@ -95,20 +112,51 @@ export default function ChatbotScreen() {
               gap: "4px"
             }}
           >
-            {/* 메세지 말풍선 */}
+            {/* 메세지 몸체 (말풍선 + 시간 가로 배치) */}
             <div style={{
-              backgroundColor: msg.sender === "user" ? "var(--primary)" : "var(--surface)",
-              color: msg.sender === "user" ? "white" : "var(--foreground)",
-              padding: "12px 14px",
-              borderRadius: msg.sender === "user" ? "16px 16px 2px 16px" : "16px 16px 16px 2px",
-              fontSize: "12.5px",
-              fontWeight: "600",
-              lineHeight: "1.5",
-              border: msg.sender === "user" ? "none" : "1px solid var(--border)",
-              boxShadow: "var(--shadow-sm)",
-              whiteSpace: "pre-line"
+              display: "flex",
+              alignItems: "flex-end",
+              gap: "6px",
+              flexDirection: msg.sender === "user" ? "row-reverse" : "row"
             }}>
-              {msg.text}
+              {/* 메세지 말풍선 */}
+              <div style={{
+                backgroundColor: msg.sender === "user" ? "var(--primary)" : "var(--surface)",
+                color: msg.sender === "user" ? "white" : "var(--foreground)",
+                padding: "12px 14px",
+                borderRadius: msg.sender === "user" ? "16px 16px 2px 16px" : "16px 16px 16px 2px",
+                fontSize: "12.5px",
+                fontWeight: "600",
+                lineHeight: "1.5",
+                border: msg.sender === "user" ? "none" : "1px solid var(--border)",
+                boxShadow: "var(--shadow-sm)",
+                whiteSpace: "pre-line"
+              }}>
+                {msg.sender === "bot"
+                  ? renderTextWithPlaceLinks(
+                    msg.text,
+                    msg.places?.map((sp) => places.find((p) => p.id === sp.id) || sp),
+                    router,
+                    unlockedUntil,
+                    nowMs,
+                    handlePromptUnlock
+                  )
+                  : msg.text}
+              </div>
+
+              {/* 가상 시간 표시 */}
+              {msg.time && (
+                <span style={{
+                  fontSize: "9px",
+                  color: "var(--text-muted)",
+                  fontWeight: "650",
+                  whiteSpace: "nowrap",
+                  marginBottom: "2px",
+                  userSelect: "none"
+                }}>
+                  {msg.time}
+                </span>
+              )}
             </div>
 
             {/* AI 가이드 추천 장소의 인라인 카드 삽입 영역 */}
@@ -119,7 +167,8 @@ export default function ChatbotScreen() {
                 gap: "6px",
                 marginTop: "6px"
               }}>
-                {msg.places.map((place) => {
+                {msg.places.map((snapPlace) => {
+                  const place = places.find((p) => p.id === snapPlace.id) || snapPlace;
                   return (
                     <div
                       key={place.id}
@@ -271,4 +320,61 @@ export default function ChatbotScreen() {
 
     </div>
   );
+}
+
+// 챗봇 답변 본문에 포함된 추천 장소들의 이름을 클릭 시 상세 페이지로 이동하는 링크로 변환합니다.
+function renderTextWithPlaceLinks(
+  text: string,
+  msgPlaces: any[] | undefined,
+  router: any,
+  unlockedUntil: number,
+  nowMs: number,
+  handlePromptUnlock: () => void
+) {
+  if (!msgPlaces || msgPlaces.length === 0) {
+    return text;
+  }
+
+  // 매칭 우선순위를 위해 이름이 긴 장소 순서대로 정렬
+  const sortedPlaces = [...msgPlaces].sort((a, b) => b.name.length - a.name.length);
+
+  // 정규식 특수문자 이스케이프
+  const escapeRegExp = (str: string) => {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  };
+
+  const placeNamesPattern = sortedPlaces.map((p) => escapeRegExp(p.name)).join("|");
+  if (!placeNamesPattern) return text;
+
+  const regex = new RegExp(`(${placeNamesPattern})`, "g");
+  const parts = text.split(regex);
+
+  return parts.map((part, index) => {
+    const matchedPlace = sortedPlaces.find((p) => p.name === part);
+    if (matchedPlace) {
+      return (
+        <span
+          key={index}
+          onClick={(e) => {
+            e.stopPropagation();
+            const isUnknown = calculateWeightedCrowdLevel(matchedPlace.history, nowMs) === 0;
+            if (isUnknown || unlockedUntil > nowMs) {
+              router.push(`/detail/${matchedPlace.id}`);
+            } else {
+              handlePromptUnlock();
+            }
+          }}
+          style={{
+            color: "var(--primary)",
+            textDecoration: "underline",
+            fontWeight: "800",
+            cursor: "pointer"
+          }}
+        >
+          {part}
+        </span>
+      );
+    }
+    return part;
+  });
 }

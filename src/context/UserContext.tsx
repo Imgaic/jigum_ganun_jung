@@ -59,8 +59,6 @@ interface UserContextType {
   nowMs: number;
   handleAuthSubmit: (event: FormEvent<HTMLFormElement>) => Promise<void>;
   handleLogout: () => Promise<void>;
-  refreshRankings: () => Promise<void>;
-  refreshUserDirectory: () => Promise<void>;
   switchUser: (userId: number) => Promise<ReportSyncResult>;
   syncReportWithServer: (placeId: number, crowdLevel: number, durationMinutes: number, pointsAwarded: number) => Promise<ReportSyncResult>;
   userPoints: number;
@@ -82,6 +80,7 @@ interface UserContextType {
   formatTimeLeft: (seconds: number) => string;
   handlePromptUnlock: () => void;
   handleConfirmUnlock: () => void;
+  syncVirtualReportWithUser: (nickname: string, pointsAwarded: number) => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -136,8 +135,8 @@ function toUserProfile(user: RankedUser): UserProfile {
 export function UserProvider({ children }: { children: React.ReactNode }) {
   const [authStatus, setAuthStatus] = useState<AuthStatus>("guest");
   const [authMode, setAuthMode] = useState<AuthMode>("login");
-  const [authUsername, setAuthUsername] = useState<string>("");
-  const [authPassword, setAuthPassword] = useState<string>("");
+  const [authUsername, setAuthUsername] = useState<string>("test01");
+  const [authPassword, setAuthPassword] = useState<string>("cau1234!");
   const [authNickname, setAuthNickname] = useState<string>("");
   const [authError, setAuthError] = useState<string>("");
   const [isAuthSubmitting, setIsAuthSubmitting] = useState<boolean>(false);
@@ -210,13 +209,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     [currentUserId]
   );
 
-  const refreshRankings = useCallback(async () => {
-    return;
-  }, []);
 
-  const refreshUserDirectory = useCallback(async () => {
-    return;
-  }, []);
 
   const touchLastLogin = (userId: number) => {
     setUsers((prev) =>
@@ -348,17 +341,34 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       prev.map((user) =>
         user.id === currentUserId
           ? {
-              ...user,
-              points: user.points + pointsAwarded,
-              reportCount: user.reportCount + 1,
-              trustScore: Math.min(100, user.trustScore + 1),
-            }
+            ...user,
+            points: user.points + pointsAwarded,
+            reportCount: user.reportCount + 1,
+            trustScore: Math.min(100, user.trustScore + 1),
+          }
           : user
       )
     );
 
     return { ok: true };
   };
+
+  const syncVirtualReportWithUser = useCallback((nickname: string, pointsAwarded: number) => {
+    setUsers((prev) =>
+      prev.map((user) => {
+        if (user.nickname === nickname) {
+          const updated = {
+            ...user,
+            points: user.points + pointsAwarded,
+            reportCount: user.reportCount + 1,
+            trustScore: Math.min(100, user.trustScore + 1),
+          };
+          return updated;
+        }
+        return user;
+      })
+    );
+  }, []);
 
   useEffect(() => {
     setGlobalTimeSpeed(timeSpeed);
@@ -395,7 +405,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     const targetMins = activeReport.duration - 5;
     const realDelaySeconds = (targetMins > 0 ? targetMins : 5) * 60;
     const delayMs = (realDelaySeconds * 1000) / timeSpeed;
-    
+
     const timer = setTimeout(() => {
       setShowReReportNotification(true);
     }, delayMs);
@@ -420,8 +430,8 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       return;
     }
     setUserPoints((prev) => prev - 10);
-    setUnlockedUntil(getVirtualNow() + 3 * 60 * 1000);
-    setUnlockTimeLeft(180);
+    setUnlockedUntil(getVirtualNow() + 5 * 60 * 1000);
+    setUnlockTimeLeft(300);
     setShowUnlockModal(false);
   };
 
@@ -445,8 +455,6 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         nowMs,
         handleAuthSubmit,
         handleLogout,
-        refreshRankings,
-        refreshUserDirectory,
         switchUser,
         syncReportWithServer,
         userPoints,
@@ -468,6 +476,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         formatTimeLeft,
         handlePromptUnlock,
         handleConfirmUnlock,
+        syncVirtualReportWithUser,
       }}
     >
       {children}

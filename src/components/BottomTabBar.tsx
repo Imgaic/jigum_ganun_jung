@@ -105,7 +105,7 @@ export default function BottomTabBar() {
         }}
       >
         <span style={{ fontSize: "20px" }}>💬</span>
-        <span>AI 추천 챗봇</span>
+        <span>장소 추천 AI</span>
       </button>
 
       {/* 마이 탭 */}

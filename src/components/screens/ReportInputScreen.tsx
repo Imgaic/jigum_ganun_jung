@@ -91,9 +91,9 @@ export default function ReportInputScreen() {
 
     setPlaces(updatedPlaces);
 
-    // 3. 기여 보상: 3분 무료 열람 상태 활성화 (가상 시간 기준)
-    setUnlockedUntil(submittedAt + 3 * 60 * 1000);
-    setUnlockTimeLeft(180);
+    // 3. 기여 보상: 5분 무료 열람 상태 활성화 (가상 시간 기준)
+    setUnlockedUntil(submittedAt + 5 * 60 * 1000);
+    setUnlockTimeLeft(300);
 
     // 활성 제보 데이터 저장 (재제보 알림 타이머 5분 전 트리거용)
     setActiveReport({

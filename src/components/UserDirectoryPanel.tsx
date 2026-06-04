@@ -35,7 +35,7 @@ function getRankAccent(entry: UserDirectoryEntry) {
 }
 
 export default function UserDirectoryPanel() {
-  const { currentUser, userDirectory, refreshUserDirectory, switchUser } = useUserContext();
+  const { currentUser, userDirectory, switchUser } = useUserContext();
   const [switchingUserId, setSwitchingUserId] = React.useState<number | null>(null);
   const [switchError, setSwitchError] = React.useState<string>("");
   const [activeTable, setActiveTable] = React.useState<"users" | "places">("users");
@@ -106,33 +106,13 @@ export default function UserDirectoryPanel() {
 
         {activeTable === "users" ? (
           <>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "12px" }}>
-          <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-            <span style={{ fontSize: "10px", fontWeight: 900, color: "var(--primary)", letterSpacing: "0.06em" }}>
-              USER DATABASE
-            </span>
-            <h3 style={{ fontSize: "15px", fontWeight: 950, color: "var(--foreground)" }}>
-              전체 유저 정보 테이블
-            </h3>
-          </div>
-          <button
-            type="button"
-            onClick={() => void refreshUserDirectory()}
-            title="전체 유저 목록 새로고침"
-            style={{
-              border: "1px solid var(--border)",
-              backgroundColor: "var(--surface)",
-              color: "var(--foreground)",
-              borderRadius: "8px",
-              padding: "7px 9px",
-              fontSize: "11px",
-              fontWeight: 850,
-              cursor: "pointer",
-              whiteSpace: "nowrap",
-            }}
-          >
-            새로고침
-          </button>
+        <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+          <span style={{ fontSize: "10px", fontWeight: 900, color: "var(--primary)", letterSpacing: "0.06em" }}>
+            USER DATABASE
+          </span>
+          <h3 style={{ fontSize: "15px", fontWeight: 950, color: "var(--foreground)" }}>
+            전체 유저 정보 테이블
+          </h3>
         </div>
 
         <div style={{

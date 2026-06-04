@@ -180,7 +180,7 @@ export default function ListScreen() {
       </div>
 
       {/* 필터링된 장소 스크롤 뷰 */}
-      <div style={{ padding: "0 16px", display: "flex", flexDirection: "column", gap: "10px" }}>
+      <div style={{ padding: "0 16px", display: "flex", flexDirection: "column", gap: "10px", marginBottom: "24px" }}>
         {sortedPlaces.length > 0 ? (
           sortedPlaces.map((place) => {
             const isExpired = nowMs - place.updatedAt > 30 * 60 * 1000;
@@ -247,26 +247,26 @@ export default function ListScreen() {
                     <CrowdBadge place={place} customClick />
                   </div>
 
-                <p style={{ fontSize: "11.5px", color: "var(--text-muted)" }}>
-                  {place.detailLocation}
-                </p>
+                  <p style={{ fontSize: "11.5px", color: "var(--text-muted)" }}>
+                    {place.detailLocation}
+                  </p>
 
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid var(--border)", paddingTop: "8px", marginTop: "2.5px" }}>
-                  <div style={{ display: "flex", gap: "4px" }}>
-                    {place.purposes.map((p) => (
-                      <span key={p} style={{ fontSize: "9px", fontWeight: "700", backgroundColor: "var(--surface-hover)", color: "var(--text-muted)", padding: "2px 5px", borderRadius: "4px" }}>
-                        {PURPOSE_EMOJIS[p] || ""} {p}
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid var(--border)", paddingTop: "8px", marginTop: "2.5px" }}>
+                    <div style={{ display: "flex", gap: "4px" }}>
+                      {place.purposes.map((p) => (
+                        <span key={p} style={{ fontSize: "9px", fontWeight: "700", backgroundColor: "var(--surface-hover)", color: "var(--text-muted)", padding: "2px 5px", borderRadius: "4px" }}>
+                          {PURPOSE_EMOJIS[p] || ""} {p}
+                        </span>
+                      ))}
+                    </div>
+
+                    <div style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "10px", fontWeight: "700", color: isExpired ? "var(--accent)" : "var(--text-muted)" }}>
+                      <ClockIcon size={12} />
+                      <span>
+                        {isExpired ? "업데이트 필요 ⚠️" : getRelativeTimeText(place.updatedAt, nowMs)}
                       </span>
-                    ))}
+                    </div>
                   </div>
-
-                  <div style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "10px", fontWeight: "700", color: isExpired ? "var(--accent)" : "var(--text-muted)" }}>
-                    <ClockIcon size={12} />
-                    <span>
-                      {isExpired ? "업데이트 필요 ⚠️" : getRelativeTimeText(place.updatedAt, nowMs)}
-                    </span>
-                  </div>
-                </div>
                 </div>
               </div>
             );

@@ -4,7 +4,7 @@ import React, { createContext, useContext, useState } from "react";
 import { ChatMessage } from "../types";
 import { usePlacesContext } from "./PlaceContext";
 import { calculateWeightedCrowdLevel, getCrowdLevelInfo } from "../utils/crowdAnalyzer";
-import { getVirtualNow } from "../utils/timeSpeed";
+import { getVirtualNow, formatVirtualTime } from "../utils/timeSpeed";
 
 interface ChatContextType {
   chatMessages: ChatMessage[];
@@ -23,6 +23,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
       id: 1,
       sender: "bot",
       text: "안녕하세요! 중앙대학교 실시간 공간 도우미 챗봇입니다. 🤖\n\n'지금 공부하기 좋은 여유로운 라운지 추천해줘' 혹은 '310관 식당 자리 있어?' 같이 원하시는 장소나 상태를 물어보세요!",
+      time: formatVirtualTime(getVirtualNow())
     },
   ]);
 
@@ -33,6 +34,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
       id: chatMessages.length + 1,
       sender: "user",
       text: chatInput,
+      time: formatVirtualTime(getVirtualNow())
     };
 
     setChatMessages((prev) => [...prev, userMsg]);
@@ -52,6 +54,10 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
         };
       });
 
+      // 가상 기준시 포맷팅 (예: "15시 30분")
+      const date = new Date(responseTime);
+      const virtualTimeStr = `${String(date.getHours()).padStart(2, "0")}시 ${String(date.getMinutes()).padStart(2, "0")}분`;
+
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: {
@@ -59,7 +65,9 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
         },
         body: JSON.stringify({
           message: chatInput,
-          places: placesWithCalculatedCrowd
+          places: placesWithCalculatedCrowd,
+          history: chatMessages,
+          virtualTime: virtualTimeStr
         })
       });
 
@@ -70,6 +78,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
         sender: "bot",
         text: data.text || "죄송합니다. 답변을 가져오지 못했습니다.",
         places: data.places && data.places.length > 0 ? data.places : undefined,
+        time: formatVirtualTime(getVirtualNow())
       };
 
       setChatMessages((prev) => [...prev, botMsg]);

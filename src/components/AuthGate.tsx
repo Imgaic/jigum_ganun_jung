@@ -35,7 +35,7 @@ export default function AuthGate() {
         </span>
         <h1 style={{ fontSize: "28px", fontWeight: "950", color: "var(--foreground)" }}>지금 가는 중</h1>
         <p style={{ fontSize: "13px", color: "var(--text-muted)", lineHeight: "1.6" }}>
-          로그인하고 제보 포인트를 쌓아 교내 실시간 공간 랭킹에 참여하세요.
+          제보 포인트를 쌓아<br />교내 실시간 공간 랭킹에 참여하세요.
         </p>
       </div>
 

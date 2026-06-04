@@ -26,15 +26,15 @@ export default function RootLayout({
   return (
     <html lang="ko" className={notoSansKr.variable}>
       <body>
-        <PlaceProvider>
-          <ChatProvider>
-            <UserProvider>
+        <UserProvider>
+          <PlaceProvider>
+            <ChatProvider>
               <GpsProvider>
                 <AppLayoutWrapper>{children}</AppLayoutWrapper>
               </GpsProvider>
-            </UserProvider>
-          </ChatProvider>
-        </PlaceProvider>
+            </ChatProvider>
+          </PlaceProvider>
+        </UserProvider>
       </body>
     </html>
   );

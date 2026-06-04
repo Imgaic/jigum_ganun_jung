@@ -9,7 +9,7 @@ export default function MyInfoScreen() {
   const router = useRouter();
 
   // 유저 포인트 정보 컨텍스트 직접 참조
-  const { userPoints, currentUser, rankings, refreshRankings, handleLogout } = useUserContext();
+  const { userPoints, currentUser, rankings, handleLogout } = useUserContext();
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
@@ -81,9 +81,9 @@ export default function MyInfoScreen() {
             marginTop: "10px"
           }}>
             {[
-              { label: "현재 순위", value: `#${currentUser?.rank || "-"}` },
-              { label: "종합점수", value: `${currentUser?.score || 0}` },
-              { label: "제보수", value: `${currentUser?.reportCount || 0}` },
+              { label: "제보 건수", value: `${currentUser?.reportCount || 0}건` },
+              { label: "신뢰도", value: `${currentUser?.trustScore || 0}점` },
+              { label: "종합 점수", value: `${currentUser?.score || 0}점` },
             ].map((item) => (
               <div key={item.label} style={{
                 backgroundColor: "rgba(255, 255, 255, 0.55)",
@@ -94,7 +94,7 @@ export default function MyInfoScreen() {
                 flexDirection: "column",
                 gap: "3px"
               }}>
-                <span style={{ fontSize: "9.5px", color: "var(--text-muted)", fontWeight: "700" }}>{item.label}</span>
+                <span style={{ fontSize: "13px", color: "var(--foreground)", fontWeight: "700" }}>{item.label}</span>
                 <strong style={{ fontSize: "13px", color: "var(--foreground)" }}>{item.value}</strong>
               </div>
             ))}
@@ -115,9 +115,9 @@ export default function MyInfoScreen() {
             <span style={{ fontSize: "24px" }}>🎒</span>
             <div>
               <h4 style={{ fontSize: "13.5px", fontWeight: "850" }}>내 등급: {currentUser && currentUser.rank <= 3 ? "CAU 제보왕" : "실시간 제보단"}</h4>
-              <p style={{ fontSize: "10.5px", color: "var(--text-muted)", marginTop: "1.5px" }}>
-                신뢰도 {currentUser?.trustScore || 0}점 · 종합점수 공식 반영
-              </p>
+              {/* <p style={{ fontSize: "10.5px", color: "var(--text-muted)", marginTop: "1.5px" }}>
+                종합점수 {currentUser?.score || 0}점
+              </p> */}
             </div>
           </div>
           <span style={{ fontSize: "11px", fontWeight: "700", color: "var(--primary)", backgroundColor: "var(--foreground)", padding: "3px 8px", borderRadius: "12px" }}>
@@ -133,32 +133,16 @@ export default function MyInfoScreen() {
           padding: "16px",
           display: "flex",
           flexDirection: "column",
-          gap: "10px"
+          gap: "10px",
+          marginBottom: "24px"
         }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <div>
               <h4 style={{ fontSize: "13px", fontWeight: "900", color: "var(--foreground)" }}>🏆 유저별 종합 랭킹 TOP 10</h4>
               <p style={{ fontSize: "10.5px", color: "var(--text-muted)", marginTop: "2px" }}>
-                점수 = 포인트 + 제보수×5 + 신뢰도×2
+                종합점수 = 포인트 + 제보수×5 + 신뢰도×2
               </p>
             </div>
-            <button
-              onClick={() => {
-                void refreshRankings();
-              }}
-              style={{
-                border: "1px solid var(--border)",
-                backgroundColor: "var(--surface-hover)",
-                color: "var(--text-muted)",
-                borderRadius: "9px",
-                padding: "6px 8px",
-                fontSize: "10px",
-                fontWeight: "800",
-                cursor: "pointer"
-              }}
-            >
-              새로고침
-            </button>
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "7px" }}>
@@ -202,24 +186,6 @@ export default function MyInfoScreen() {
             ))}
           </div>
         </div>
-
-        {/* 포인트 혜택 기획 */}
-        <div style={{
-          backgroundColor: "var(--primary-light)",
-          border: "1px dashed hsla(var(--primary-hue), 85%, 40%, 0.3)",
-          padding: "16px",
-          borderRadius: "var(--radius-md)",
-          display: "flex",
-          flexDirection: "column",
-          gap: "6px"
-        }}>
-          <h4 style={{ fontSize: "12.5px", fontWeight: "800", color: "var(--primary)" }}>🎁 제보자 혜택 안내 (Exchange Point)</h4>
-          <p style={{ fontSize: "11px", color: "var(--foreground)", opacity: 0.9, lineHeight: "1.6" }}>
-            1. <strong>커피 쿠폰</strong>: 교내 CAU 생활협동조합 매장에서 300P당 아메리카노 1잔 무료 교환.<br />
-            2. <strong>생협 할인권</strong>: 교내 서점/문구점에서 구매 시 포인트 금액만큼 즉시 차감 결제 가능.
-          </p>
-        </div>
-
       </div>
     </div>
   );

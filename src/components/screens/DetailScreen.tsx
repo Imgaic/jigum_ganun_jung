@@ -115,26 +115,26 @@ export default function DetailScreen({ selectedPlace }: DetailScreenProps) {
                 <span style={{
                   fontSize: "30px",
                   fontWeight: "950",
-                  color: "var(--text-muted)"
+                  color: "var(--foreground)"
                 }}>
                   알 수 없음 ⚠️
                 </span>
               </div>
 
               {/* 제보가 없을 때의 포인트 추가 기여 안내 카드 */}
-              <div style={{
+              {/* <div style={{
                 backgroundColor: "hsl(40, 100%, 97%)",
                 border: "1.5px solid hsla(40, 95%, 45%, 0.25)",
                 padding: "12px 14px",
                 borderRadius: "var(--radius-sm)",
                 textAlign: "left",
                 marginTop: "4px"
-              }}>
-                <span style={{ fontSize: "11.5px", fontWeight: "850", color: "hsl(40, 95%, 40%)" }}>💡 현장 제보 유도</span>
-                <p style={{ fontSize: "11px", color: "var(--primary)", marginTop: "4px", lineHeight: "1.4" }}>
-                  최근 30분간 접수된 제보가 없어 혼잡도를 파악할 수 없습니다. 현장의 첫 제보자가 되어 <strong>(+30P)</strong>을 받아 가세요! 🪙
-                </p>
-              </div>
+              }}> */}
+              <span style={{ fontSize: "11.5px", fontWeight: "850", color: "var(--primary)", marginTop: "16px" }}>최근 30분간 접수된 제보가 없어 혼잡도를 파악할 수 없습니다. 현장의 첫 제보자가 되어 <strong>30P</strong>를 받아 가세요! 🪙</span>
+              {/* <p style={{ fontSize: "11px", color: "var(--primary)", marginTop: "4px", lineHeight: "1.4" }}>
+                  
+                </p> */}
+              {/* </div> */}
             </div>
           ) : isUnlocked ? (
             <>
@@ -199,7 +199,7 @@ export default function DetailScreen({ selectedPlace }: DetailScreenProps) {
                 className="btn-primary"
                 style={{ padding: "8px 16px", fontSize: "12px", borderRadius: "10px", marginTop: "4px" }}
               >
-                🔑 10P 소모하여 3분 열람 활성화
+                🔑 10P 소모하여 5분 열람 활성화
               </button>
             </div>
           )}

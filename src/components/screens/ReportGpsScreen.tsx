@@ -27,7 +27,7 @@ export default function ReportGpsScreen() {
 
     // 선택한 건물의 첫 장소 오브젝트 획득하여 디폴트 입력값으로 구성
     const firstPlaceInBuilding = places.find((p) => p.building === reportedBuilding) || places[0];
-    
+
     // URL Query Parameter 조립 후 제보 정보 기입 화면으로 전환
     router.push(`/report/input?placeId=${firstPlaceInBuilding.id}&building=${encodeURIComponent(reportedBuilding)}`);
   };
@@ -50,7 +50,7 @@ export default function ReportGpsScreen() {
         <h2 style={{ fontSize: "16px", fontWeight: "850" }}>GPS 위치 확인</h2>
       </header>
 
-      <div style={{ padding: "0 16px", display: "flex", flexDirection: "column", gap: "18px" }}>
+      <div style={{ padding: "0 16px", display: "flex", flexDirection: "column", gap: "18px", marginBottom: "24px" }}>
 
         {/* GPS 센서 일치 여부에 따른 상단 레이더 뱃지 연출 */}
         <div className="glass-panel" style={{
@@ -129,11 +129,8 @@ export default function ReportGpsScreen() {
             <h4 style={{ fontSize: "13px", fontWeight: "850", color: "var(--accent)" }}>
               🚨 제보 제한 안내
             </h4>
-            <p style={{ fontSize: "11.5px", color: "var(--foreground)", lineHeight: "1.6" }}>
-              현재 가상 GPS 센서 상의 위치는 <strong>{myGPSBuilding}</strong>입니다. 제보 대상 건물인 <strong>{reportedBuilding}</strong>과 달라 제보 작성이 제한됩니다.
-            </p>
-            <p style={{ fontSize: "11px", color: "var(--text-muted)", borderTop: "1px dashed var(--border)", paddingTop: "6px", marginTop: "4px" }}>
-              💡 <strong>해결 방법</strong>: PC 브라우저 시연 화면 우측의 <strong>가상 GPS 센서 스위치</strong>에서 현재 건물 위치를 <strong>{reportedBuilding}</strong>으로 클릭해 일치시켜 주세요!
+            <p style={{ fontSize: "11.5px", color: "var(--accent)", lineHeight: "1.6" }}>
+              현재 확인되는 GPS 센서 상의 위치는 <strong>{myGPSBuilding}</strong>입니다. 제보 대상 건물인 <strong>{reportedBuilding}</strong>과 달라 제보 작성이 제한됩니다.
             </p>
           </div>
         ) : (

@@ -86,12 +86,12 @@ export default function ReportCompleteScreen() {
               fontWeight: "900",
               marginTop: "4px"
             }}>
-              👑 정보 공백 복구 특별 기여 보너스 (+30P)
+              정보 공백 복구 (30P)
             </span>
           )}
           {earnedPointsThisTime === 20 && (
             <span style={{ fontSize: "11px", color: "var(--accent)", fontWeight: "800", marginTop: "2px" }}>
-              🔥 연속 재제보 갱신 특별 보상 (+20P)
+              재제보 갱신 (20P)
             </span>
           )}
         </div>
