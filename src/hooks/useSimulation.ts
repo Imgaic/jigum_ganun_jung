@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import type { SetStateAction } from "react";
 import { Place } from "../types";
 import { getCrowdLevelInfo } from "../utils/crowdAnalyzer";
+import { getVirtualNow, formatVirtualTime, formatVirtualTimeWithSec } from "../utils/timeSpeed";
 
 /**
  * 백그라운드 가상 학생 제보 시뮬레이션 엔진을 관리하는 커스텀 훅입니다.
@@ -45,8 +46,8 @@ export function useSimulation(
       const randomYear = Math.floor(Math.random() * 5) + 2021;
       const fakeReporter = `${randomYear}****`;
 
-      const now = new Date();
-      const nowStr = now.toTimeString().split(" ")[0].substring(0, 5); // "HH:MM"
+      const vNow = getVirtualNow();
+      const nowStr = formatVirtualTime(vNow);
 
       // 4. 장소 상태에 새 제보 추가 및 updatedAt 시간 갱신
       setPlaces((prev) =>
@@ -54,13 +55,13 @@ export function useSimulation(
           if (p.id === targetPlace.id) {
             return {
               ...p,
-              updatedAt: Date.now(),
+              updatedAt: vNow,
               reportsCount: p.reportsCount + 1,
               history: [
                 {
                   crowdLevel: randomCrowd,
                   time: nowStr,
-                  timestamp: Date.now(),
+                  timestamp: vNow,
                   reporter: fakeReporter,
                 },
                 ...p.history,
@@ -72,10 +73,7 @@ export function useSimulation(
       );
 
       // 5. 외부 HUD용 디버그 로그 추가
-      const hrs = String(now.getHours()).padStart(2, "0");
-      const mins = String(now.getMinutes()).padStart(2, "0");
-      const secs = String(now.getSeconds()).padStart(2, "0");
-      const timeSecStr = `${hrs}:${mins}:${secs}`;
+      const timeSecStr = formatVirtualTimeWithSec(vNow);
       const crowdLabel = getCrowdLevelInfo(randomCrowd).label;
       const logLine = `[${timeSecStr}] ${targetPlace.name} -> ${crowdLabel} 갱신됨`;
 

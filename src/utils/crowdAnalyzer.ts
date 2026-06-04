@@ -13,13 +13,13 @@ export function calculateWeightedCrowdLevel(history: PlaceHistory[], nowMs: numb
   const now = nowMs;
   const limitMs = 30 * 60 * 1000; // 30분
 
-  // 1. 최근 30분 이내의 제보만 선별
+  // 1. 최근 30분(가상 시각) 이내의 제보만 선별
   const recentReports = history.filter(
     (hist) => now - hist.timestamp >= 0 && now - hist.timestamp <= limitMs
   );
 
   if (recentReports.length === 0) {
-    return 0; // 최근 30분 내 제보가 없으면 알 수 없음
+    return 0; // 유효 제보가 없으면 알 수 없음
   }
 
   let totalWeight = 0;

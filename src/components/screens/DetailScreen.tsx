@@ -24,7 +24,7 @@ export default function DetailScreen({ selectedPlace }: DetailScreenProps) {
 
   const buttonRewardPoints = isUnknown ? 30 : 10;
 
-  // 최근 30분 이내에 등록된 유효 제보 개수 계산
+  // 최근 30분 이내에 등록된 유효 제보 개수 계산 (배속 반영)
   const recentReportsCount = selectedPlace.history.filter(
     (h) => nowMs - h.timestamp <= 30 * 60 * 1000
   ).length;

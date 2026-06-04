@@ -6,6 +6,7 @@ import { ArrowLeftIcon } from "../Icons";
 import { usePlacesContext } from "../../context/PlaceContext";
 import { useUserContext } from "../../context/UserContext";
 import { calculateWeightedCrowdLevel, getCrowdLevelInfo } from "../../utils/crowdAnalyzer";
+import { getVirtualNow, formatVirtualTime } from "../../utils/timeSpeed";
 
 export default function ReportInputScreen() {
   const router = useRouter();
@@ -39,7 +40,7 @@ export default function ReportInputScreen() {
     const targetPlaceObj = places.find((p) => p.id === reportedPlaceId);
     if (!targetPlaceObj) return;
 
-    const submittedAt = Date.now();
+    const submittedAt = getVirtualNow();
     const currentCalcLevel = calculateWeightedCrowdLevel(targetPlaceObj.history, submittedAt);
 
     // 1. 차등 포인트 정책 보상금 책정
@@ -65,7 +66,7 @@ export default function ReportInputScreen() {
     }
 
     // 2. places 배열 갱신 (새 제보 히스토리 삽입)
-    const nowStr = new Date().toTimeString().split(" ")[0].substring(0, 5); // "HH:MM"
+    const nowStr = formatVirtualTime(submittedAt);
     const updatedPlaces = places.map((place) => {
       if (place.id === reportedPlaceId) {
         return {
@@ -88,8 +89,8 @@ export default function ReportInputScreen() {
 
     setPlaces(updatedPlaces);
 
-    // 3. 기여 보상: 3분 무료 열람 상태 활성화
-    setUnlockedUntil(Date.now() + 3 * 60 * 1000);
+    // 3. 기여 보상: 3분 무료 열람 상태 활성화 (가상 시간 기준)
+    setUnlockedUntil(submittedAt + 3 * 60 * 1000);
     setUnlockTimeLeft(180);
 
     // 활성 제보 데이터 저장 (재제보 알림 타이머 5분 전 트리거용)

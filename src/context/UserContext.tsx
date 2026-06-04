@@ -3,6 +3,7 @@
 import React, { createContext, useCallback, useContext, useState, useEffect } from "react";
 import type { FormEvent } from "react";
 import type { RankingEntry, UserDirectoryEntry, UserProfile } from "../lib/types";
+import { getVirtualNow, setGlobalTimeSpeed } from "../utils/timeSpeed";
 
 type AuthMode = "login" | "signup";
 type AuthStatus = "checking" | "guest" | "authenticated";
@@ -80,7 +81,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
   const [rankings, setRankings] = useState<RankingEntry[]>([]);
   const [userDirectory, setUserDirectory] = useState<UserDirectoryEntry[]>([]);
-  const [nowMs, setNowMs] = useState<number>(() => Date.now());
+  const [nowMs, setNowMs] = useState<number>(() => getVirtualNow());
   const [userPoints, setUserPoints] = useState<number>(0);
   const [unlockedUntil, setUnlockedUntil] = useState<number>(0);
   const [unlockTimeLeft, setUnlockTimeLeft] = useState<number>(0);
@@ -110,14 +111,6 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
     const data = (await response.json()) as UsersApiResponse;
     setUserDirectory(data.users || []);
-  }, []);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setNowMs(Date.now());
-    }, 1000);
-
-    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -216,18 +209,32 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // 1초 간격 정보 열람 Pass 잔여시간 갱신 타이머
+  // timeSpeed 변경 시 전역 모듈 값 동기화
+  useEffect(() => {
+    setGlobalTimeSpeed(timeSpeed);
+  }, [timeSpeed]);
+
+  // 가상 시간 기준 현재 시각 갱신 타이머
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setNowMs(getVirtualNow());
+    }, 200);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // 가속 연동 잔여시간 갱신 타이머
   useEffect(() => {
     if (unlockedUntil <= 0) return;
 
     const interval = setInterval(() => {
-      const remaining = Math.max(0, Math.ceil((unlockedUntil - Date.now()) / 1000));
+      const remaining = Math.max(0, Math.ceil((unlockedUntil - getVirtualNow()) / 1000));
       setUnlockTimeLeft(remaining);
 
       if (remaining === 0) {
         setUnlockedUntil(0);
       }
-    }, 1000);
+    }, 200);
 
     return () => clearInterval(interval);
   }, [unlockedUntil]);
@@ -272,7 +279,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       return;
     }
     setUserPoints((prev) => prev - 10);
-    setUnlockedUntil(Date.now() + 3 * 60 * 1000); // 3분 열람권 부여
+    setUnlockedUntil(getVirtualNow() + 3 * 60 * 1000); // 3분 열람권 부여 (가상 시간 기준)
     setUnlockTimeLeft(180);
     setShowUnlockModal(false);
   };
