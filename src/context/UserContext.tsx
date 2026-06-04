@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { setGlobalTimeSpeed, getVirtualNow } from "../utils/timeSpeed";
 
 interface UserContextType {
   userPoints: number;
@@ -36,18 +37,23 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const [showReReportNotification, setShowReReportNotification] = useState<boolean>(false);
   const [timeSpeed, setTimeSpeed] = useState<number>(1); // 기본값: 1배속 (실시간)
 
-  // 1초 간격 정보 열람 Pass 잔여시간 갱신 타이머
+  // timeSpeed 변경 시 전역 모듈 값 동기화
+  useEffect(() => {
+    setGlobalTimeSpeed(timeSpeed);
+  }, [timeSpeed]);
+
+  // 가속 연동 잔여시간 갱신 타이머 (가상 시간 반영을 위해 200ms 주기로 갱신하여 가속 연출)
   useEffect(() => {
     if (unlockedUntil <= 0) return;
 
     const interval = setInterval(() => {
-      const remaining = Math.max(0, Math.ceil((unlockedUntil - Date.now()) / 1000));
+      const remaining = Math.max(0, Math.ceil((unlockedUntil - getVirtualNow()) / 1000));
       setUnlockTimeLeft(remaining);
 
       if (remaining === 0) {
         setUnlockedUntil(0);
       }
-    }, 1000);
+    }, 200);
 
     return () => clearInterval(interval);
   }, [unlockedUntil]);
@@ -92,7 +98,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       return;
     }
     setUserPoints((prev) => prev - 10);
-    setUnlockedUntil(Date.now() + 3 * 60 * 1000); // 3분 열람권 부여
+    setUnlockedUntil(getVirtualNow() + 3 * 60 * 1000); // 3분 열람권 부여 (가상 시간 기준)
     setUnlockTimeLeft(180);
     setShowUnlockModal(false);
   };

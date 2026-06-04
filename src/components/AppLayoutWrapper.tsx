@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useGpsContext } from "../context/GpsContext";
 import { usePlacesContext } from "../context/PlaceContext";
 import { useUserContext } from "../context/UserContext";
+import { getVirtualNow, formatVirtualTime } from "../utils/timeSpeed";
 
 // Import layouts/HUD
 import ExternalHud from "./ExternalHud";
@@ -35,16 +36,14 @@ export default function AppLayoutWrapper({ children }: { children: React.ReactNo
 
   const [currentTime, setCurrentTime] = useState<string>("13:43");
 
-  // 가상 시스템 시계 업데이트 (1분 간격)
+  // 가상 시스템 시계 업데이트 (배속 적용 및 200ms 고주파수 갱신으로 흐름 연출)
   useEffect(() => {
     const updateTime = () => {
-      const now = new Date();
-      const hrs = String(now.getHours()).padStart(2, "0");
-      const mins = String(now.getMinutes()).padStart(2, "0");
-      setCurrentTime(`${hrs}:${mins}`);
+      const vNow = getVirtualNow();
+      setCurrentTime(formatVirtualTime(vNow));
     };
     updateTime();
-    const interval = setInterval(updateTime, 60000);
+    const interval = setInterval(updateTime, 200);
     return () => clearInterval(interval);
   }, []);
 

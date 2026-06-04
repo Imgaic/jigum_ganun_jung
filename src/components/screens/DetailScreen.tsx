@@ -7,6 +7,7 @@ import { ArrowLeftIcon } from "../Icons";
 import { useUserContext } from "../../context/UserContext";
 import { calculateWeightedCrowdLevel, getCrowdLevelInfo } from "../../utils/crowdAnalyzer";
 import { getRelativeTimeText } from "../../utils/timeFormatter";
+import { getVirtualNow } from "../../utils/timeSpeed";
 
 interface DetailScreenProps {
   selectedPlace: Place;
@@ -24,9 +25,9 @@ export default function DetailScreen({ selectedPlace }: DetailScreenProps) {
 
   const buttonRewardPoints = isUnknown ? 30 : 10;
 
-  // 최근 30분 이내에 등록된 유효 제보 개수 계산
+  // 최근 30분 이내에 등록된 유효 제보 개수 계산 (배속 반영)
   const recentReportsCount = selectedPlace.history.filter(
-    (h) => Date.now() - h.timestamp <= 30 * 60 * 1000
+    (h) => getVirtualNow() - h.timestamp <= 30 * 60 * 1000
   ).length;
 
   return (

@@ -9,6 +9,7 @@ import { useUserContext } from "../../context/UserContext";
 import { useGpsContext } from "../../context/GpsContext";
 import { calculateWeightedCrowdLevel } from "../../utils/crowdAnalyzer";
 import { getRelativeTimeText } from "../../utils/timeFormatter";
+import { getVirtualNow } from "../../utils/timeSpeed";
 import CrowdBadge from "../CrowdBadge";
 
 export default function ListScreen() {
@@ -182,7 +183,7 @@ export default function ListScreen() {
       <div style={{ padding: "0 16px", display: "flex", flexDirection: "column", gap: "10px" }}>
         {sortedPlaces.length > 0 ? (
           sortedPlaces.map((place) => {
-            const isExpired = Date.now() - place.updatedAt > 30 * 60 * 1000;
+            const isExpired = getVirtualNow() - place.updatedAt > 30 * 60 * 1000;
 
             return (
               <div

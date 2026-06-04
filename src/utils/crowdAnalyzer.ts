@@ -1,4 +1,5 @@
 import { PlaceHistory } from "../types";
+import { getVirtualNow } from "./timeSpeed";
 
 /**
  * 최근 30분간의 제보 이력들을 기반으로 시간 감쇠 가중 평균(Time-Decay Weighted Average) 혼잡도를 계산합니다.
@@ -10,16 +11,16 @@ export function calculateWeightedCrowdLevel(history: PlaceHistory[]): number {
     return 0; // 제보가 전혀 없으면 알 수 없음
   }
 
-  const now = Date.now();
-  const limitMs = 30 * 60 * 1000; // 30분
+  const now = getVirtualNow();
+  const limitMs = 30 * 60 * 1000; // 30분 (가상 시간 클록 기준이므로 30분 고정)
 
-  // 1. 최근 30분 이내의 제보만 선별
+  // 1. 최근 30분(가상 시각) 이내의 제보만 선별
   const recentReports = history.filter(
     (hist) => now - hist.timestamp >= 0 && now - hist.timestamp <= limitMs
   );
 
   if (recentReports.length === 0) {
-    return 0; // 최근 30분 내 제보가 없으면 알 수 없음
+    return 0; // 유효 제보가 없으면 알 수 없음
   }
 
   let totalWeight = 0;

@@ -7,6 +7,7 @@ import { ArrowLeftIcon } from "../Icons";
 import { usePlacesContext } from "../../context/PlaceContext";
 import { useUserContext } from "../../context/UserContext";
 import { calculateWeightedCrowdLevel, getCrowdLevelInfo } from "../../utils/crowdAnalyzer";
+import { getVirtualNow, formatVirtualTime } from "../../utils/timeSpeed";
 
 export default function ReportInputScreen() {
   const router = useRouter();
@@ -62,18 +63,19 @@ export default function ReportInputScreen() {
     }
 
     // 2. places 배열 갱신 (새 제보 히스토리 삽입)
-    const nowStr = new Date().toTimeString().split(" ")[0].substring(0, 5); // "HH:MM"
+    const vNow = getVirtualNow();
+    const nowStr = formatVirtualTime(vNow);
     const updatedPlaces = places.map((place) => {
       if (place.id === reportedPlaceId) {
         return {
           ...place,
-          updatedAt: Date.now(),
+          updatedAt: vNow,
           reportsCount: place.reportsCount + 1,
           history: [
             {
               crowdLevel: reportedCrowdLevel,
               time: nowStr,
-              timestamp: Date.now(),
+              timestamp: vNow,
               reporter: "2025**** (나)",
             },
             ...place.history,
@@ -85,8 +87,8 @@ export default function ReportInputScreen() {
 
     setPlaces(updatedPlaces);
 
-    // 3. 기여 보상: 3분 무료 열람 상태 활성화
-    setUnlockedUntil(Date.now() + 3 * 60 * 1000);
+    // 3. 기여 보상: 3분 무료 열람 상태 활성화 (가상 시간 기준)
+    setUnlockedUntil(vNow + 3 * 60 * 1000);
     setUnlockTimeLeft(180);
 
     // 활성 제보 데이터 저장 (재제보 알림 타이머 5분 전 트리거용)
