@@ -1,0 +1,54 @@
+"use client";
+
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { Place, INITIAL_PLACES } from "../types";
+import { useSimulation } from "../hooks/useSimulation";
+
+interface PlaceContextType {
+  places: Place[];
+  setPlaces: React.Dispatch<React.SetStateAction<Place[]>>;
+  isSimulating: boolean;
+  setIsSimulating: React.Dispatch<React.SetStateAction<boolean>>;
+  simLogs: string[];
+  targetCount: number;
+  setTargetCount: React.Dispatch<React.SetStateAction<number>>;
+  generatedCount: number;
+}
+
+const PlaceContext = createContext<PlaceContextType | undefined>(undefined);
+
+export function PlaceProvider({ children }: { children: React.ReactNode }) {
+  const [places, setPlaces] = useState<Place[]>([]);
+  const [targetCount, setTargetCount] = useState<number>(30); // 기본 제보 생성 개수: 30개
+  
+  // 초기 Mock 장소 데이터 로드 (시작값: 전원 "알 수 없음")
+  useEffect(() => {
+    setPlaces(INITIAL_PLACES());
+  }, []);
+
+  // 시뮬레이터 훅 주입 연동
+  const { isSimulating, setIsSimulating, simLogs, generatedCount } = useSimulation(places, setPlaces, targetCount);
+
+  return (
+    <PlaceContext.Provider value={{
+      places,
+      setPlaces,
+      isSimulating,
+      setIsSimulating,
+      simLogs,
+      targetCount,
+      setTargetCount,
+      generatedCount
+    }}>
+      {children}
+    </PlaceContext.Provider>
+  );
+}
+
+export function usePlacesContext() {
+  const context = useContext(PlaceContext);
+  if (!context) {
+    throw new Error("usePlacesContext must be used within a PlaceProvider");
+  }
+  return context;
+}

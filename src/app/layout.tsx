@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import { Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
+import { PlaceProvider } from "../context/PlaceContext";
+import { UserProvider } from "../context/UserContext";
+import { GpsProvider } from "../context/GpsContext";
+import { ChatProvider } from "../context/ChatContext";
+import AppLayoutWrapper from "../components/AppLayoutWrapper";
 
 const notoSansKr = Noto_Sans_KR({
   subsets: ["latin"],
@@ -20,7 +25,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" className={notoSansKr.variable}>
-      <body>{children}</body>
+      <body>
+        <PlaceProvider>
+          <ChatProvider>
+            <UserProvider>
+              <GpsProvider>
+                <AppLayoutWrapper>{children}</AppLayoutWrapper>
+              </GpsProvider>
+            </UserProvider>
+          </ChatProvider>
+        </PlaceProvider>
+      </body>
     </html>
   );
 }
