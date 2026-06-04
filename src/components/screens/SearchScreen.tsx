@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { PURPOSE_EMOJIS, BUILDINGS } from "../../types";
 import { ArrowLeftIcon, SearchIcon } from "../Icons";
 import { usePlacesContext } from "../../context/PlaceContext";
+import { useUserContext } from "../../context/UserContext";
 import { calculateWeightedCrowdLevel } from "../../utils/crowdAnalyzer";
 
 export default function SearchScreen() {
@@ -12,6 +13,7 @@ export default function SearchScreen() {
   
   // 전체 장소 데이터 구독
   const { places } = usePlacesContext();
+  const { nowMs } = useUserContext();
 
   // 검색/필터 입력값을 전역이 아닌 페이지 내부 로컬 상태로 완전 캡슐화
   const [searchText, setSearchText] = useState<string>("");
@@ -54,7 +56,7 @@ export default function SearchScreen() {
       }
 
       if (excludeCrowded) {
-        const currentCalcLevel = calculateWeightedCrowdLevel(place.history);
+        const currentCalcLevel = calculateWeightedCrowdLevel(place.history, nowMs);
         if (currentCalcLevel >= 4) return false;
       }
 

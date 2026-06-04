@@ -10,11 +10,11 @@ import ExternalHud from "./ExternalHud";
 import NotificationBanner from "./NotificationBanner";
 import UnlockModal from "./UnlockModal";
 import BottomTabBar from "./BottomTabBar";
+import AuthGate from "./AuthGate";
 
 export default function AppLayoutWrapper({ children }: { children: React.ReactNode }) {
   const { myGPSBuilding, setMyGPSBuilding } = useGpsContext();
   const {
-    places,
     isSimulating,
     setIsSimulating,
     simLogs,
@@ -31,6 +31,7 @@ export default function AppLayoutWrapper({ children }: { children: React.ReactNo
     setShowReReportNotification,
     timeSpeed,
     setTimeSpeed,
+    authStatus,
   } = useUserContext();
 
   const [currentTime, setCurrentTime] = useState<string>("13:43");
@@ -47,6 +48,63 @@ export default function AppLayoutWrapper({ children }: { children: React.ReactNo
     const interval = setInterval(updateTime, 60000);
     return () => clearInterval(interval);
   }, []);
+
+  if (authStatus !== "authenticated") {
+    return (
+      <div className="app-wrapper">
+        <div className="device-frame">
+          <div className="status-bar-spacer" />
+          <div style={{
+            display: "flex",
+            justifyContent: "space-between",
+            padding: "6px 24px 0",
+            fontSize: "12px",
+            fontWeight: "600",
+            color: "var(--foreground)",
+            opacity: 0.8,
+            zIndex: 100
+          }}>
+            <span>{currentTime}</span>
+            <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
+              <span>LTE</span>
+              <div style={{
+                width: "18px",
+                height: "10px",
+                border: "1px solid var(--foreground)",
+                borderRadius: "3px",
+                padding: "1px",
+                display: "flex",
+                alignItems: "center"
+              }}>
+                <div style={{ width: "90%", height: "100%", backgroundColor: "var(--foreground)", borderRadius: "1px" }} />
+              </div>
+            </div>
+          </div>
+
+          <main className="phone-screen animate-slide-up">
+            {authStatus === "checking" ? (
+              <div style={{
+                minHeight: "100%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "12px",
+                padding: "24px",
+                textAlign: "center"
+              }}>
+                <span className="pulse-dot" style={{ width: "24px", height: "24px" }} />
+                <strong style={{ fontSize: "14px" }}>세션 확인 중</strong>
+                <span style={{ fontSize: "12px", color: "var(--text-muted)" }}>저장된 로그인 정보를 불러오고 있습니다.</span>
+              </div>
+            ) : (
+              <AuthGate />
+            )}
+          </main>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="app-wrapper">

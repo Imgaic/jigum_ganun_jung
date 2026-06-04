@@ -12,7 +12,7 @@ export default function ChatbotScreen() {
 
   // 대화 및 유저 포인트 전역 Context 참조
   const { chatMessages, handleSendChatMessage } = useChatContext();
-  const { unlockedUntil, handlePromptUnlock } = useUserContext();
+  const { unlockedUntil, handlePromptUnlock, nowMs } = useUserContext();
 
   // 입력창 텍스트 상태 격리 (전역에서 페이지 로컬 상태로 하향화 완료!)
   const [chatInput, setChatInput] = useState<string>("");
@@ -123,7 +123,7 @@ export default function ChatbotScreen() {
                     <div
                       key={place.id}
                       onClick={() => {
-                        if (unlockedUntil <= Date.now()) {
+                        if (unlockedUntil <= nowMs) {
                           handlePromptUnlock();
                         } else {
                           router.push(`/detail/${place.id}`);

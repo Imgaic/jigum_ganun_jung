@@ -11,9 +11,9 @@ interface CrowdBadgeProps {
 }
 
 export default function CrowdBadge({ place, customClick = false }: CrowdBadgeProps) {
-  const { unlockedUntil, handlePromptUnlock } = useUserContext();
-  const isUnlocked = unlockedUntil > Date.now();
-  const currentCalcLevel = calculateWeightedCrowdLevel(place.history);
+  const { unlockedUntil, handlePromptUnlock, nowMs } = useUserContext();
+  const isUnlocked = unlockedUntil > nowMs;
+  const currentCalcLevel = calculateWeightedCrowdLevel(place.history, nowMs);
 
   // 정보가 잠겨 있는 상태일 경우
   if (!isUnlocked) {

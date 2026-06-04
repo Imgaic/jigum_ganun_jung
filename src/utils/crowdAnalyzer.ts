@@ -5,12 +5,12 @@ import { PlaceHistory } from "../types";
  * @param history 제보 이력 목록
  * @returns 0 (알 수 없음) 또는 1~5 단계 혼잡도
  */
-export function calculateWeightedCrowdLevel(history: PlaceHistory[]): number {
+export function calculateWeightedCrowdLevel(history: PlaceHistory[], nowMs: number): number {
   if (!history || history.length === 0) {
     return 0; // 제보가 전혀 없으면 알 수 없음
   }
 
-  const now = Date.now();
+  const now = nowMs;
   const limitMs = 30 * 60 * 1000; // 30분
 
   // 1. 최근 30분 이내의 제보만 선별
@@ -76,4 +76,3 @@ export function getCrowdLevelInfo(level: number): CrowdLevelInfo {
       return { label: "정보 없음", color: "#6b7280", bg: "rgba(107, 114, 128, 0.12)", border: "rgba(107, 114, 128, 0.3)" };
   }
 }
-

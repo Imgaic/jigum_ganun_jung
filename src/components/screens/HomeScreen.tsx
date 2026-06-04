@@ -23,6 +23,7 @@ export default function HomeScreen() {
     unlockTimeLeft,
     formatTimeLeft,
     handlePromptUnlock,
+    nowMs,
   } = useUserContext();
 
   // 내 GPS 근처 장소 필터링
@@ -30,7 +31,7 @@ export default function HomeScreen() {
 
   // 내 건물 부근 장소 중 '알 수 없음(제보 공백)'인 곳이 있으면 특별 보상 적용
   const hasUnknownNearby = nearbyPlaces.some(
-    (p) => calculateWeightedCrowdLevel(p.history) === 0
+    (p) => calculateWeightedCrowdLevel(p.history, nowMs) === 0
   );
   const potentialReward = hasUnknownNearby ? 30 : 10;
 
@@ -78,7 +79,7 @@ export default function HomeScreen() {
 
       {/* 정보 열람권 잠금/활성화 상태 배너 */}
       <div style={{ padding: "0 20px" }}>
-        {unlockedUntil > Date.now() ? (
+        {unlockedUntil > nowMs ? (
           <div style={{
             display: "flex",
             justifyContent: "space-between",
@@ -196,13 +197,13 @@ export default function HomeScreen() {
         <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
           {nearbyPlaces.length > 0 ? (
             nearbyPlaces.map((place) => {
-              const isExpired = Date.now() - place.updatedAt > 30 * 60 * 1000;
+              const isExpired = nowMs - place.updatedAt > 30 * 60 * 1000;
 
               return (
                 <div
                   key={place.id}
                   onClick={() => {
-                    if (unlockedUntil <= Date.now()) {
+                    if (unlockedUntil <= nowMs) {
                       handlePromptUnlock();
                     } else {
                       router.push(`/detail/${place.id}`);
@@ -252,7 +253,7 @@ export default function HomeScreen() {
                     <div style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "10.5px", fontWeight: "600", color: isExpired ? "var(--accent)" : "var(--text-muted)" }}>
                       <ClockIcon size={12} />
                       <span>
-                        {isExpired ? "업데이트 필요 ⚠️" : getRelativeTimeText(place.updatedAt)}
+                        {isExpired ? "업데이트 필요 ⚠️" : getRelativeTimeText(place.updatedAt, nowMs)}
                       </span>
                     </div>
                   </div>

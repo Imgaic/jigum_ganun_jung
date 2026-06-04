@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Place } from "../../types";
 import { ArrowLeftIcon } from "../Icons";
 import { usePlacesContext } from "../../context/PlaceContext";
 import { useUserContext } from "../../context/UserContext";
@@ -15,12 +14,12 @@ export default function ReportInputScreen() {
   // 전역 데이터 및 유저 상태 컨텍스트 참조
   const { places, setPlaces } = usePlacesContext();
   const {
-    setUserPoints,
     setUnlockedUntil,
     setUnlockTimeLeft,
     reportedPlaces,
     setReportedPlaces,
     setActiveReport,
+    syncReportWithServer,
   } = useUserContext();
 
   // URL Query Parameters로부터 전달된 제보 대상 정보 획득
@@ -36,11 +35,12 @@ export default function ReportInputScreen() {
   const filteredPlaces = places.filter((p) => p.building === queryBuilding);
 
   // 제보 등록 및 보상 산정 비즈니스 로직 (하향화 완료!)
-  const handleSubmitReport = () => {
+  const handleSubmitReport = async () => {
     const targetPlaceObj = places.find((p) => p.id === reportedPlaceId);
     if (!targetPlaceObj) return;
 
-    const currentCalcLevel = calculateWeightedCrowdLevel(targetPlaceObj.history);
+    const submittedAt = Date.now();
+    const currentCalcLevel = calculateWeightedCrowdLevel(targetPlaceObj.history, submittedAt);
 
     // 1. 차등 포인트 정책 보상금 책정
     const isUnknownPlace = currentCalcLevel === 0; // 정보 공백 상태 복구 특별 보상
@@ -53,8 +53,11 @@ export default function ReportInputScreen() {
       pointsToAdd = 20; // +20P
     }
 
-    // 유저 보유 포인트 적립
-    setUserPoints((prev) => prev + pointsToAdd);
+    const serverResult = await syncReportWithServer(reportedPlaceId, reportedCrowdLevel, reportedDuration, pointsToAdd);
+    if (!serverResult.ok) {
+      alert(serverResult.message || "제보 등록 중 문제가 발생했습니다.");
+      return;
+    }
 
     // 연속 제보 보상 예외 검증을 위해 등록
     if (!isRereport) {
@@ -67,13 +70,13 @@ export default function ReportInputScreen() {
       if (place.id === reportedPlaceId) {
         return {
           ...place,
-          updatedAt: Date.now(),
+          updatedAt: submittedAt,
           reportsCount: place.reportsCount + 1,
           history: [
             {
               crowdLevel: reportedCrowdLevel,
               time: nowStr,
-              timestamp: Date.now(),
+              timestamp: submittedAt,
               reporter: "2025**** (나)",
             },
             ...place.history,
@@ -93,7 +96,7 @@ export default function ReportInputScreen() {
     setActiveReport({
       placeId: reportedPlaceId,
       duration: reportedDuration,
-      timestamp: Date.now()
+      timestamp: submittedAt
     });
 
     // 4. 완료 화면으로 넘어가며 제보 결과 데이터를 쿼리 파라미터로 전달

@@ -16,17 +16,17 @@ export default function DetailScreen({ selectedPlace }: DetailScreenProps) {
   const router = useRouter();
 
   // 포인트 락/언락 관련 상태 전역 Context 참조
-  const { unlockedUntil, handlePromptUnlock } = useUserContext();
+  const { unlockedUntil, handlePromptUnlock, nowMs } = useUserContext();
 
-  const currentCalcLevel = calculateWeightedCrowdLevel(selectedPlace.history);
+  const currentCalcLevel = calculateWeightedCrowdLevel(selectedPlace.history, nowMs);
   const isUnknown = currentCalcLevel === 0;
-  const isUnlocked = unlockedUntil > Date.now();
+  const isUnlocked = unlockedUntil > nowMs;
 
   const buttonRewardPoints = isUnknown ? 30 : 10;
 
   // 최근 30분 이내에 등록된 유효 제보 개수 계산
   const recentReportsCount = selectedPlace.history.filter(
-    (h) => Date.now() - h.timestamp <= 30 * 60 * 1000
+    (h) => nowMs - h.timestamp <= 30 * 60 * 1000
   ).length;
 
   return (
@@ -150,7 +150,7 @@ export default function DetailScreen({ selectedPlace }: DetailScreenProps) {
               </div>
 
               <div style={{ display: "flex", justifyContent: "space-between", fontSize: "11px", color: "var(--text-muted)", fontWeight: "600", marginTop: "6px" }}>
-                <span>최근 업데이트: {getRelativeTimeText(selectedPlace.updatedAt)}</span>
+                <span>최근 업데이트: {getRelativeTimeText(selectedPlace.updatedAt, nowMs)}</span>
                 <span>제보 데이터 신뢰도: <strong style={{ color: "var(--primary)" }}>{selectedPlace.reportsCount > 10 ? "높음 🔥" : "보통"}</strong></span>
               </div>
 
@@ -214,7 +214,7 @@ export default function DetailScreen({ selectedPlace }: DetailScreenProps) {
                         </span>
                       )}
                     </div>
-                    <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>{getRelativeTimeText(hist.timestamp)} ({hist.time})</span>
+                    <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>{getRelativeTimeText(hist.timestamp, nowMs)} ({hist.time})</span>
                   </div>
                 ))
               ) : (

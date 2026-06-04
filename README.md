@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 지금 가는 중
 
-## Getting Started
+중앙대학교 교내 공간의 실시간 혼잡도를 제보하고 확인하는 Next.js 프로토타입입니다.
 
-First, run the development server:
+## 실행
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+브라우저에서 `http://localhost:3000`을 엽니다.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 로그인 테스트 계정
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+앱 시작 전 로그인 화면이 먼저 표시됩니다. 개발용 SQLite DB는 첫 API 호출 시 `data/jigum_ganun_jung.sqlite`에 생성되며, 아래 테스트 계정 10개가 자동 등록됩니다.
 
-## Learn More
+- 아이디: `test01` ~ `test10`
+- 비밀번호: `cau1234!`
 
-To learn more about Next.js, take a look at the following resources:
+회원가입으로 새 계정을 만들 수도 있습니다. 비밀번호는 bcrypt hash로 저장되고, 로그인 세션은 HTTP-only 쿠키 JWT로 유지됩니다.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 랭킹 공식
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+내 정보 화면에서 유저별 종합 랭킹 TOP 10을 확인할 수 있습니다.
 
-## Deploy on Vercel
+```text
+종합점수 = 포인트 + 제보수 * 5 + 신뢰도 * 2
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+동점이면 제보수, 포인트, 닉네임 순으로 정렬합니다.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 주요 API
+
+- `POST /api/auth/signup`
+- `POST /api/auth/login`
+- `POST /api/auth/logout`
+- `GET /api/auth/me`
+- `POST /api/reports`
+- `GET /api/rankings`
+
+## 검증
+
+```bash
+npm run lint
+npm run build
+```

@@ -43,11 +43,12 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
 
       if (inputKeyword.includes("공부") || inputKeyword.includes("시험") || inputKeyword.includes("조용한")) {
         responseText = "조용하고 쾌적하게 공부하기 좋은 장소들을 실시간 정보를 기반으로 추천해 드릴게요! 📚";
+        const responseTime = Date.now();
         recommendedPlaces = places.filter(
-          (p) =>
-            p.purposes.includes("공부") &&
-            calculateWeightedCrowdLevel(p.history) <= 2 &&
-            calculateWeightedCrowdLevel(p.history) > 0
+          (p) => {
+            const crowdLevel = calculateWeightedCrowdLevel(p.history, responseTime);
+            return p.purposes.includes("공부") && crowdLevel <= 2 && crowdLevel > 0;
+          }
         );
       } else if (inputKeyword.includes("학식") || inputKeyword.includes("식사") || inputKeyword.includes("참슬기")) {
         responseText = "현재 참슬기식당이나 학생식당 등 교내 식사 장소 상황입니다. 혼잡한 시간을 피해 방문해 보세요! 🍔";

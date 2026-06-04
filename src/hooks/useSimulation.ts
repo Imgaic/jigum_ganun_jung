@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import type { SetStateAction } from "react";
 import { Place } from "../types";
 import { getCrowdLevelInfo } from "../utils/crowdAnalyzer";
 
@@ -17,15 +18,20 @@ export function useSimulation(
   const [simLogs, setSimLogs] = useState<string[]>([]);
   const [generatedCount, setGeneratedCount] = useState<number>(0);
 
+  const startSimulation = (value: SetStateAction<boolean>) => {
+    const nextValue = typeof value === "function" ? value(isSimulating) : value;
+    if (nextValue) {
+      setGeneratedCount(0);
+    }
+    setIsSimulating(nextValue);
+  };
+
   // 백그라운드 제보 생성 타이머 루프
   useEffect(() => {
     if (!isSimulating || places.length === 0) return;
 
     let activeTimer: NodeJS.Timeout;
     let currentGenerated = 0;
-
-    // 시뮬레이션 시작 시 발생 개수 초기화
-    setGeneratedCount(0);
 
     const triggerSimulationReport = () => {
       // 1. 임의의 장소 선택
@@ -98,11 +104,11 @@ export function useSimulation(
     activeTimer = setTimeout(triggerSimulationReport, firstDelay);
 
     return () => clearTimeout(activeTimer);
-  }, [isSimulating, places.length, setPlaces, targetCount]);
+  }, [isSimulating, places, setPlaces, targetCount]);
 
   return {
     isSimulating,
-    setIsSimulating,
+    setIsSimulating: startSimulation,
     simLogs,
     setSimLogs,
     generatedCount,

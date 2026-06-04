@@ -1,8 +1,45 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useCallback, useContext, useState, useEffect } from "react";
+import type { FormEvent } from "react";
+import type { RankingEntry, UserProfile } from "../lib/types";
+
+type AuthMode = "login" | "signup";
+type AuthStatus = "checking" | "guest" | "authenticated";
+
+interface AuthApiResponse {
+  user?: UserProfile | null;
+  message?: string;
+}
+
+interface RankingsApiResponse {
+  rankings?: RankingEntry[];
+}
+
+interface ReportSyncResult {
+  ok: boolean;
+  message?: string;
+}
 
 interface UserContextType {
+  authStatus: AuthStatus;
+  authMode: AuthMode;
+  setAuthMode: React.Dispatch<React.SetStateAction<AuthMode>>;
+  authUsername: string;
+  setAuthUsername: React.Dispatch<React.SetStateAction<string>>;
+  authPassword: string;
+  setAuthPassword: React.Dispatch<React.SetStateAction<string>>;
+  authNickname: string;
+  setAuthNickname: React.Dispatch<React.SetStateAction<string>>;
+  authError: string;
+  isAuthSubmitting: boolean;
+  currentUser: UserProfile | null;
+  rankings: RankingEntry[];
+  nowMs: number;
+  handleAuthSubmit: (event: FormEvent<HTMLFormElement>) => Promise<void>;
+  handleLogout: () => Promise<void>;
+  refreshRankings: () => Promise<void>;
+  syncReportWithServer: (placeId: number, crowdLevel: number, durationMinutes: number, pointsAwarded: number) => Promise<ReportSyncResult>;
   userPoints: number;
   setUserPoints: React.Dispatch<React.SetStateAction<number>>;
   unlockedUntil: number;
@@ -27,7 +64,17 @@ interface UserContextType {
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
-  const [userPoints, setUserPoints] = useState<number>(120); // 초기 포인트
+  const [authStatus, setAuthStatus] = useState<AuthStatus>("checking");
+  const [authMode, setAuthMode] = useState<AuthMode>("login");
+  const [authUsername, setAuthUsername] = useState<string>("");
+  const [authPassword, setAuthPassword] = useState<string>("");
+  const [authNickname, setAuthNickname] = useState<string>("");
+  const [authError, setAuthError] = useState<string>("");
+  const [isAuthSubmitting, setIsAuthSubmitting] = useState<boolean>(false);
+  const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
+  const [rankings, setRankings] = useState<RankingEntry[]>([]);
+  const [nowMs, setNowMs] = useState<number>(() => Date.now());
+  const [userPoints, setUserPoints] = useState<number>(0);
   const [unlockedUntil, setUnlockedUntil] = useState<number>(0);
   const [unlockTimeLeft, setUnlockTimeLeft] = useState<number>(0);
   const [showUnlockModal, setShowUnlockModal] = useState<boolean>(false);
@@ -35,6 +82,120 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const [activeReport, setActiveReport] = useState<{ placeId: number; duration: number; timestamp: number } | null>(null);
   const [showReReportNotification, setShowReReportNotification] = useState<boolean>(false);
   const [timeSpeed, setTimeSpeed] = useState<number>(1); // 기본값: 1배속 (실시간)
+
+  const applyUserSession = useCallback((user: UserProfile) => {
+    setCurrentUser(user);
+    setUserPoints(user.points);
+    setAuthStatus("authenticated");
+  }, []);
+
+  const refreshRankings = useCallback(async () => {
+    const response = await fetch("/api/rankings", { cache: "no-store" });
+    if (!response.ok) return;
+
+    const data = (await response.json()) as RankingsApiResponse;
+    setRankings(data.rankings || []);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setNowMs(Date.now());
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const loadSession = async () => {
+      try {
+        const response = await fetch("/api/auth/me", { cache: "no-store" });
+        const data = (await response.json()) as AuthApiResponse;
+
+        if (!response.ok || !data.user) {
+          setAuthStatus("guest");
+          return;
+        }
+
+        applyUserSession(data.user);
+        await refreshRankings();
+      } catch {
+        setAuthStatus("guest");
+      }
+    };
+
+    loadSession();
+  }, [applyUserSession, refreshRankings]);
+
+  const handleAuthSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setAuthError("");
+    setIsAuthSubmitting(true);
+
+    try {
+      const endpoint = authMode === "login" ? "/api/auth/login" : "/api/auth/signup";
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: authUsername,
+          password: authPassword,
+          nickname: authNickname,
+        }),
+      });
+      const data = (await response.json()) as AuthApiResponse;
+
+      if (!response.ok || !data.user) {
+        setAuthError(data.message || "로그인 처리 중 문제가 발생했습니다.");
+        return;
+      }
+
+      applyUserSession(data.user);
+      await refreshRankings();
+    } catch {
+      setAuthError("서버와 통신하지 못했습니다. 잠시 후 다시 시도해 주세요.");
+    } finally {
+      setIsAuthSubmitting(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    await fetch("/api/auth/logout", { method: "POST" });
+    setCurrentUser(null);
+    setRankings([]);
+    setUserPoints(0);
+    setAuthPassword("");
+    setAuthStatus("guest");
+  };
+
+  const syncReportWithServer = async (placeId: number, crowdLevel: number, durationMinutes: number, pointsAwarded: number) => {
+    try {
+      const response = await fetch("/api/reports", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ placeId, crowdLevel, durationMinutes, pointsAwarded }),
+      });
+      const data = (await response.json()) as AuthApiResponse & RankingsApiResponse;
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          setCurrentUser(null);
+          setAuthStatus("guest");
+        }
+        return { ok: false, message: data.message || "제보 등록 중 문제가 발생했습니다." };
+      }
+
+      if (data.user) {
+        applyUserSession(data.user);
+      }
+      if (data.rankings) {
+        setRankings(data.rankings);
+      }
+
+      return { ok: true };
+    } catch {
+      return { ok: false, message: "서버와 통신하지 못했습니다. 잠시 후 다시 시도해 주세요." };
+    }
+  };
 
   // 1초 간격 정보 열람 Pass 잔여시간 갱신 타이머
   useEffect(() => {
@@ -100,6 +261,24 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   return (
     <UserContext.Provider
       value={{
+        authStatus,
+        authMode,
+        setAuthMode,
+        authUsername,
+        setAuthUsername,
+        authPassword,
+        setAuthPassword,
+        authNickname,
+        setAuthNickname,
+        authError,
+        isAuthSubmitting,
+        currentUser,
+        rankings,
+        nowMs,
+        handleAuthSubmit,
+        handleLogout,
+        refreshRankings,
+        syncReportWithServer,
         userPoints,
         setUserPoints,
         unlockedUntil,

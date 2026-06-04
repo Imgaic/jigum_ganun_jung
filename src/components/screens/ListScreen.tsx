@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import type { ChangeEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { PURPOSE_EMOJIS } from "../../types";
 import { ArrowLeftIcon, ClockIcon } from "../Icons";
@@ -17,7 +18,7 @@ export default function ListScreen() {
   
   // 전역 데이터 및 GPS 상태 구독
   const { places } = usePlacesContext();
-  const { unlockedUntil, handlePromptUnlock } = useUserContext();
+  const { unlockedUntil, handlePromptUnlock, nowMs } = useUserContext();
   const { myGPSBuilding } = useGpsContext();
 
   const [sortBy, setSortBy] = useState<"distance" | "crowd" | "updated">("distance");
@@ -74,7 +75,7 @@ export default function ListScreen() {
 
       // 붐빔 제외 토글 검사
       if (excludeCrowded) {
-        const currentCalcLevel = calculateWeightedCrowdLevel(place.history);
+        const currentCalcLevel = calculateWeightedCrowdLevel(place.history, nowMs);
         if (currentCalcLevel >= 4) return false; // 4(붐빔), 5(매우 혼잡) 제외
       }
 
@@ -85,8 +86,8 @@ export default function ListScreen() {
   // 2. 정렬 로직 (로컬 연산)
   const getSortedPlaces = (placesList: typeof places) => {
     return [...placesList].sort((a, b) => {
-      const aLevel = calculateWeightedCrowdLevel(a.history);
-      const bLevel = calculateWeightedCrowdLevel(b.history);
+      const aLevel = calculateWeightedCrowdLevel(a.history, nowMs);
+      const bLevel = calculateWeightedCrowdLevel(b.history, nowMs);
 
       if (sortBy === "distance") {
         // 거리 정렬: 현재 내 GPS 건물에 속해있는 장소를 최상단에 배치
@@ -136,7 +137,7 @@ export default function ListScreen() {
         {/* 정렬 셀렉터 */}
         <select
           value={sortBy}
-          onChange={(e: any) => setSortBy(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLSelectElement>) => setSortBy(e.target.value as "distance" | "crowd" | "updated")}
           style={{
             border: "1px solid var(--border)",
             backgroundColor: "var(--surface)",
@@ -182,13 +183,13 @@ export default function ListScreen() {
       <div style={{ padding: "0 16px", display: "flex", flexDirection: "column", gap: "10px" }}>
         {sortedPlaces.length > 0 ? (
           sortedPlaces.map((place) => {
-            const isExpired = Date.now() - place.updatedAt > 30 * 60 * 1000;
+            const isExpired = nowMs - place.updatedAt > 30 * 60 * 1000;
 
             return (
               <div
                 key={place.id}
                 onClick={() => {
-                  if (unlockedUntil <= Date.now()) {
+                  if (unlockedUntil <= nowMs) {
                     handlePromptUnlock();
                   } else {
                     router.push(`/detail/${place.id}`);
@@ -237,7 +238,7 @@ export default function ListScreen() {
                   <div style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "10px", fontWeight: "700", color: isExpired ? "var(--accent)" : "var(--text-muted)" }}>
                     <ClockIcon size={12} />
                     <span>
-                      {isExpired ? "업데이트 필요 ⚠️" : getRelativeTimeText(place.updatedAt)}
+                      {isExpired ? "업데이트 필요 ⚠️" : getRelativeTimeText(place.updatedAt, nowMs)}
                     </span>
                   </div>
                 </div>
