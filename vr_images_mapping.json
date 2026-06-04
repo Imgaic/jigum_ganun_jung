@@ -34,9 +34,9 @@
     "id": 4,
     "building": "중앙도서관",
     "floor": "2층",
-    "name": "중앙도서관 2층 제2열람실",
+    "name": "중앙도서관 2층 제1열람실",
     "sceneId": "N/A",
-    "sceneName": "실제 현장 사진 (중앙도서관 2층 제2열람실)",
+    "sceneName": "실제 현장 사진 (중앙도서관 2층 제1열람실)",
     "imageUrl": "/images/204/204_reading_room_2.png",
     "isPlaceholder": false
   },
@@ -66,11 +66,10 @@
     "building": "309관",
     "floor": "1층",
     "name": "309관 1층 오픈라운지",
-    "sceneId": "pano11612",
-    "sceneName": "106관 제2의학관 (대용)",
-    "imageUrl": "https://www.cau.ac.kr/vr2020/seoul/indexdata/pano_11612/thumbnail.jpg",
-    "isPlaceholder": true,
-    "placeholderReason": "기존 소스코드의 임시 매핑 유지"
+    "sceneId": "N/A",
+    "sceneName": "실제 현장 사진 (308관 1층 로비라운지 대용)",
+    "imageUrl": "/images/308/308_1f_lobby_lounge.png",
+    "isPlaceholder": false
   },
   {
     "id": 8,
