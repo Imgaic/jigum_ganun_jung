@@ -25,11 +25,18 @@ export function calculateWeightedCrowdLevel(history: PlaceHistory[], nowMs: numb
   let totalWeight = 0;
   let weightedSum = 0;
 
-  // 2. 시간 감쇠 가중치 합산 계산
+  // 2. 시간-신뢰도 복합 가중치 합산 계산
   recentReports.forEach((report) => {
     const diffMs = now - report.timestamp;
     // 방금 제보 = 1.0, 30분 경과 = 0.0 으로 선형 감쇠
-    const weight = Math.max(0, 1 - diffMs / limitMs);
+    const timeWeight = Math.max(0, 1 - diffMs / limitMs);
+    
+    // 유저 신뢰도 비율 반영 (기본값 80% / 0.8)
+    const trustFactor = report.reporterTrustScore !== undefined
+      ? report.reporterTrustScore / 100
+      : 0.8;
+
+    const weight = timeWeight * trustFactor;
 
     weightedSum += report.crowdLevel * weight;
     totalWeight += weight;

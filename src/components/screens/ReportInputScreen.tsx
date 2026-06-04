@@ -21,6 +21,7 @@ export default function ReportInputScreen() {
     setReportedPlaces,
     setActiveReport,
     syncReportWithServer,
+    currentUser,
   } = useUserContext();
 
   // URL Query Parameters로부터 전달된 제보 대상 정보 획득
@@ -78,7 +79,8 @@ export default function ReportInputScreen() {
               crowdLevel: reportedCrowdLevel,
               time: nowStr,
               timestamp: submittedAt,
-              reporter: "2025**** (나)",
+              reporter: currentUser ? `${currentUser.nickname} (나)` : "2025**** (나)",
+              reporterTrustScore: currentUser ? currentUser.trustScore : 100,
             },
             ...place.history,
           ],

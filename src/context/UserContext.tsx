@@ -389,10 +389,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (!activeReport) {
-      const timer = setTimeout(() => {
-        setShowReReportNotification(true);
-      }, 15000 / timeSpeed);
-      return () => clearTimeout(timer);
+      return;
     }
 
     const targetMins = activeReport.duration - 5;

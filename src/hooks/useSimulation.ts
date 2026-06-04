@@ -3,6 +3,7 @@ import type { SetStateAction } from "react";
 import { Place } from "../types";
 import { getCrowdLevelInfo } from "../utils/crowdAnalyzer";
 import { getVirtualNow, formatVirtualTime, formatVirtualTimeWithSec } from "../utils/timeSpeed";
+import seedData from "../data/seedStore.json";
 
 /**
  * 백그라운드 가상 학생 제보 시뮬레이션 엔진을 관리하는 커스텀 훅입니다.
@@ -42,9 +43,11 @@ export function useSimulation(
       // 2. 1~5 단계 중 무작위 혼잡도 선택
       const randomCrowd = (Math.floor(Math.random() * 5) + 1) as 1 | 2 | 3 | 4 | 5;
 
-      // 3. 2021~2025 학번 가상 학번 생성
-      const randomYear = Math.floor(Math.random() * 5) + 2021;
-      const fakeReporter = `${randomYear}****`;
+      // 3. seedStore의 랜덤 유저 선택
+      const users = seedData.users;
+      const randomUser = users[Math.floor(Math.random() * users.length)];
+      const fakeReporter = randomUser.nickname;
+      const trustScore = randomUser.trustScore;
 
       const vNow = getVirtualNow();
       const nowStr = formatVirtualTime(vNow);
@@ -63,6 +66,7 @@ export function useSimulation(
                   time: nowStr,
                   timestamp: vNow,
                   reporter: fakeReporter,
+                  reporterTrustScore: trustScore,
                 },
                 ...p.history,
               ],

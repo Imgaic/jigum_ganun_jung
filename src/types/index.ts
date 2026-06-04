@@ -6,6 +6,7 @@ export interface PlaceHistory {
   time: string;
   timestamp: number; // millisecond timestamp
   reporter?: string; // masked student ID
+  reporterTrustScore?: number;
 }
 
 export interface Place {
