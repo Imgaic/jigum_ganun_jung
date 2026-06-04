@@ -4,7 +4,7 @@ import Database from "better-sqlite3";
 import bcrypt from "bcryptjs";
 import fs from "node:fs";
 import path from "node:path";
-import type { RankingEntry, UserProfile } from "./types";
+import type { RankingEntry, UserDirectoryEntry, UserProfile } from "./types";
 
 type DatabaseInstance = Database.Database;
 
@@ -22,11 +22,14 @@ interface UserRow {
 
 interface RankingRow {
   id: number;
+  username: string;
   nickname: string;
   points: number;
   report_count: number;
   trust_score: number;
   score: number;
+  created_at: string;
+  last_login_at: string | null;
 }
 
 interface TestUserSeed {
@@ -173,10 +176,13 @@ export function getRankedRows() {
     .prepare(`
       SELECT
         id,
+        username,
         nickname,
         points,
         report_count,
         trust_score,
+        created_at,
+        last_login_at,
         points + report_count * 5 + trust_score * 2 AS score
       FROM users
       ORDER BY score DESC, report_count DESC, points DESC, nickname ASC
@@ -212,6 +218,22 @@ export function getTopRankings(currentUserId?: number): RankingEntry[] {
     reportCount: row.report_count,
     trustScore: row.trust_score,
     score: row.score,
+    isCurrentUser: row.id === currentUserId,
+  }));
+}
+
+export function getUserDirectory(currentUserId?: number): UserDirectoryEntry[] {
+  return getRankedRows().map((row, index) => ({
+    id: row.id,
+    username: row.username,
+    nickname: row.nickname,
+    points: row.points,
+    reportCount: row.report_count,
+    trustScore: row.trust_score,
+    rank: index + 1,
+    score: row.score,
+    createdAt: row.created_at,
+    lastLoginAt: row.last_login_at,
     isCurrentUser: row.id === currentUserId,
   }));
 }

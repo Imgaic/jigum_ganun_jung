@@ -99,25 +99,47 @@ html, body {
   padding-right: 6px;             /* Space for scrollbar */
 }
 
+.external-user-panel {
+  display: flex;
+  flex-direction: column;
+  width: 420px;
+  flex-shrink: 0;
+  z-index: 1002;
+  animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
 /* Custom Sleek Scrollbar for External HUD */
-.external-control-hud::-webkit-scrollbar {
+.external-control-hud::-webkit-scrollbar,
+.external-user-panel::-webkit-scrollbar {
   width: 5px;
 }
-.external-control-hud::-webkit-scrollbar-track {
+.external-control-hud::-webkit-scrollbar-track,
+.external-user-panel::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 0.03);
   border-radius: 10px;
 }
-.external-control-hud::-webkit-scrollbar-thumb {
+.external-control-hud::-webkit-scrollbar-thumb,
+.external-user-panel::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.15);
   border-radius: 10px;
 }
-.external-control-hud::-webkit-scrollbar-thumb:hover {
+.external-control-hud::-webkit-scrollbar-thumb:hover,
+.external-user-panel::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.3);
 }
 
 @media (max-width: 1024px) {
   .external-control-hud {
     display: none; /* Hide on mobile/tablet viewports to keep smartphone screen layout 100% clean */
+  }
+}
+
+@media (max-width: 1240px) {
+  .external-user-panel {
+    display: none;
   }
 }
 
@@ -334,4 +356,3 @@ html, body {
 .animate-slide-up {
   animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
-

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { readSession } from "@/lib/auth";
-import { getTopRankings, getUserProfile, recordReport } from "@/lib/db";
+import { getTopRankings, getUserDirectory, getUserProfile, recordReport } from "@/lib/db";
 
 export const runtime = "nodejs";
 
@@ -46,5 +46,6 @@ export async function POST(request: Request) {
   return NextResponse.json({
     user: getUserProfile(session.userId),
     rankings: getTopRankings(session.userId),
+    users: getUserDirectory(session.userId),
   });
 }

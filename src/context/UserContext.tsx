@@ -2,7 +2,7 @@
 
 import React, { createContext, useCallback, useContext, useState, useEffect } from "react";
 import type { FormEvent } from "react";
-import type { RankingEntry, UserProfile } from "../lib/types";
+import type { RankingEntry, UserDirectoryEntry, UserProfile } from "../lib/types";
 
 type AuthMode = "login" | "signup";
 type AuthStatus = "checking" | "guest" | "authenticated";
@@ -14,6 +14,10 @@ interface AuthApiResponse {
 
 interface RankingsApiResponse {
   rankings?: RankingEntry[];
+}
+
+interface UsersApiResponse {
+  users?: UserDirectoryEntry[];
 }
 
 interface ReportSyncResult {
@@ -35,10 +39,12 @@ interface UserContextType {
   isAuthSubmitting: boolean;
   currentUser: UserProfile | null;
   rankings: RankingEntry[];
+  userDirectory: UserDirectoryEntry[];
   nowMs: number;
   handleAuthSubmit: (event: FormEvent<HTMLFormElement>) => Promise<void>;
   handleLogout: () => Promise<void>;
   refreshRankings: () => Promise<void>;
+  refreshUserDirectory: () => Promise<void>;
   syncReportWithServer: (placeId: number, crowdLevel: number, durationMinutes: number, pointsAwarded: number) => Promise<ReportSyncResult>;
   userPoints: number;
   setUserPoints: React.Dispatch<React.SetStateAction<number>>;
@@ -73,6 +79,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const [isAuthSubmitting, setIsAuthSubmitting] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
   const [rankings, setRankings] = useState<RankingEntry[]>([]);
+  const [userDirectory, setUserDirectory] = useState<UserDirectoryEntry[]>([]);
   const [nowMs, setNowMs] = useState<number>(() => Date.now());
   const [userPoints, setUserPoints] = useState<number>(0);
   const [unlockedUntil, setUnlockedUntil] = useState<number>(0);
@@ -97,6 +104,14 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     setRankings(data.rankings || []);
   }, []);
 
+  const refreshUserDirectory = useCallback(async () => {
+    const response = await fetch("/api/users", { cache: "no-store" });
+    if (!response.ok) return;
+
+    const data = (await response.json()) as UsersApiResponse;
+    setUserDirectory(data.users || []);
+  }, []);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setNowMs(Date.now());
@@ -117,14 +132,14 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         }
 
         applyUserSession(data.user);
-        await refreshRankings();
+        await Promise.all([refreshRankings(), refreshUserDirectory()]);
       } catch {
         setAuthStatus("guest");
       }
     };
 
     loadSession();
-  }, [applyUserSession, refreshRankings]);
+  }, [applyUserSession, refreshRankings, refreshUserDirectory]);
 
   const handleAuthSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -150,7 +165,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       }
 
       applyUserSession(data.user);
-      await refreshRankings();
+      await Promise.all([refreshRankings(), refreshUserDirectory()]);
     } catch {
       setAuthError("서버와 통신하지 못했습니다. 잠시 후 다시 시도해 주세요.");
     } finally {
@@ -162,6 +177,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     await fetch("/api/auth/logout", { method: "POST" });
     setCurrentUser(null);
     setRankings([]);
+    setUserDirectory([]);
     setUserPoints(0);
     setAuthPassword("");
     setAuthStatus("guest");
@@ -174,7 +190,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ placeId, crowdLevel, durationMinutes, pointsAwarded }),
       });
-      const data = (await response.json()) as AuthApiResponse & RankingsApiResponse;
+      const data = (await response.json()) as AuthApiResponse & RankingsApiResponse & UsersApiResponse;
 
       if (!response.ok) {
         if (response.status === 401) {
@@ -189,6 +205,9 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       }
       if (data.rankings) {
         setRankings(data.rankings);
+      }
+      if (data.users) {
+        setUserDirectory(data.users);
       }
 
       return { ok: true };
@@ -274,10 +293,12 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         isAuthSubmitting,
         currentUser,
         rankings,
+        userDirectory,
         nowMs,
         handleAuthSubmit,
         handleLogout,
         refreshRankings,
+        refreshUserDirectory,
         syncReportWithServer,
         userPoints,
         setUserPoints,

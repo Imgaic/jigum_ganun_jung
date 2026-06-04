@@ -38,6 +38,7 @@ npm run dev
 - `GET /api/auth/me`
 - `POST /api/reports`
 - `GET /api/rankings`
+- `GET /api/users`
 
 ## 검증
 

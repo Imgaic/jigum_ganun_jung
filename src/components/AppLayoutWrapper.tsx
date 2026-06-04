@@ -7,6 +7,7 @@ import { useUserContext } from "../context/UserContext";
 
 // Import layouts/HUD
 import ExternalHud from "./ExternalHud";
+import UserDirectoryPanel from "./UserDirectoryPanel";
 import NotificationBanner from "./NotificationBanner";
 import UnlockModal from "./UnlockModal";
 import BottomTabBar from "./BottomTabBar";
@@ -178,6 +179,8 @@ export default function AppLayoutWrapper({ children }: { children: React.ReactNo
           handleConfirmUnlock={handleConfirmUnlock}
         />
       </div>
+
+      <UserDirectoryPanel />
     </div>
   );
 }

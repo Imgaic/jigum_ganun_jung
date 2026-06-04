@@ -1,0 +1,203 @@
+"use client";
+
+import React from "react";
+import type { UserDirectoryEntry } from "../lib/types";
+import { useUserContext } from "../context/UserContext";
+
+const headerCellStyle: React.CSSProperties = {
+  padding: "0 6px 6px",
+  fontSize: "10px",
+  fontWeight: 900,
+  color: "var(--text-muted)",
+  textAlign: "left",
+  whiteSpace: "nowrap",
+};
+
+const cellStyle: React.CSSProperties = {
+  padding: "8px 6px",
+  fontSize: "11px",
+  fontWeight: 800,
+  color: "var(--foreground)",
+  verticalAlign: "middle",
+  whiteSpace: "nowrap",
+};
+
+function formatDateTime(value: string | null) {
+  if (!value) return "기록 없음";
+  return value.replace("T", " ").slice(0, 16).replace(/^(\d{4})-(\d{2})-(\d{2}) /, "$2/$3 ");
+}
+
+function getRankAccent(entry: UserDirectoryEntry) {
+  if (entry.rank === 1) return "var(--primary)";
+  if (entry.rank <= 3) return "var(--secondary)";
+  return "var(--text-muted)";
+}
+
+export default function UserDirectoryPanel() {
+  const { currentUser, userDirectory, refreshUserDirectory } = useUserContext();
+  const topUser = userDirectory[0];
+
+  return (
+    <aside className="external-user-panel">
+      <div className="glass-panel" style={{
+        borderRadius: "var(--radius-md)",
+        padding: "18px",
+        border: "1.5px solid hsla(var(--primary-hue), 85%, 40%, 0.28)",
+        display: "flex",
+        flexDirection: "column",
+        gap: "14px",
+        boxShadow: "var(--shadow-lg)",
+      }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "12px" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+            <span style={{ fontSize: "10px", fontWeight: 900, color: "var(--primary)", letterSpacing: "0.06em" }}>
+              USER DATABASE
+            </span>
+            <h3 style={{ fontSize: "15px", fontWeight: 950, color: "var(--foreground)" }}>
+              전체 유저 정보 테이블
+            </h3>
+          </div>
+          <button
+            type="button"
+            onClick={() => void refreshUserDirectory()}
+            title="전체 유저 목록 새로고침"
+            style={{
+              border: "1px solid var(--border)",
+              backgroundColor: "var(--surface)",
+              color: "var(--foreground)",
+              borderRadius: "8px",
+              padding: "7px 9px",
+              fontSize: "11px",
+              fontWeight: 850,
+              cursor: "pointer",
+              whiteSpace: "nowrap",
+            }}
+          >
+            새로고침
+          </button>
+        </div>
+
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(3, 1fr)",
+          gap: "8px",
+        }}>
+          {[
+            { label: "전체 유저", value: `${userDirectory.length}명` },
+            { label: "현재 유저", value: currentUser ? `#${currentUser.rank}` : "-" },
+            { label: "1위 점수", value: topUser ? `${topUser.score}` : "-" },
+          ].map((item) => (
+            <div
+              key={item.label}
+              style={{
+                backgroundColor: "var(--surface)",
+                border: "1px solid var(--border)",
+                borderRadius: "10px",
+                padding: "10px",
+                display: "flex",
+                flexDirection: "column",
+                gap: "3px",
+              }}
+            >
+              <span style={{ fontSize: "9.5px", color: "var(--text-muted)", fontWeight: 800 }}>{item.label}</span>
+              <strong style={{ fontSize: "14px", color: "var(--foreground)", fontWeight: 950 }}>{item.value}</strong>
+            </div>
+          ))}
+        </div>
+
+        <div style={{
+          backgroundColor: "var(--background)",
+          border: "1px solid var(--border)",
+          borderRadius: "10px",
+          padding: "10px 12px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "3px",
+        }}>
+          <span style={{ fontSize: "10px", color: "var(--text-muted)", fontWeight: 800 }}>현재 로그인</span>
+          <strong style={{ fontSize: "12px", color: "var(--foreground)", fontWeight: 900 }}>
+            {currentUser ? `${currentUser.nickname} · @${currentUser.username}` : "로그인 정보 없음"}
+          </strong>
+        </div>
+
+        <div style={{ paddingBottom: "2px" }}>
+          <table style={{
+            width: "100%",
+            borderCollapse: "separate",
+            borderSpacing: "0 6px",
+            tableLayout: "fixed",
+          }}>
+            <thead>
+              <tr>
+                <th style={{ ...headerCellStyle, width: "42px" }}>순위</th>
+                <th style={headerCellStyle}>유저</th>
+                <th style={{ ...headerCellStyle, width: "62px", textAlign: "right" }}>포인트</th>
+                <th style={{ ...headerCellStyle, width: "44px", textAlign: "right" }}>제보</th>
+                <th style={{ ...headerCellStyle, width: "56px", textAlign: "right" }}>점수</th>
+              </tr>
+            </thead>
+            <tbody>
+              {userDirectory.map((entry) => (
+                <tr
+                  key={entry.id}
+                  style={{
+                    backgroundColor: entry.isCurrentUser ? "var(--primary-light)" : "var(--surface)",
+                    boxShadow: entry.isCurrentUser ? "0 0 0 1px var(--primary)" : "0 0 0 1px var(--border)",
+                  }}
+                >
+                  <td style={{
+                    ...cellStyle,
+                    width: "42px",
+                    borderTopLeftRadius: "8px",
+                    borderBottomLeftRadius: "8px",
+                    color: getRankAccent(entry),
+                  }}>
+                    #{entry.rank}
+                  </td>
+                  <td style={{ ...cellStyle, whiteSpace: "normal" }}>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+                      <span style={{ fontSize: "11.5px", fontWeight: 900 }}>
+                        {entry.nickname}{entry.isCurrentUser ? " · 나" : ""}
+                      </span>
+                      <span style={{ fontSize: "10px", color: "var(--text-muted)", fontWeight: 750 }}>
+                        @{entry.username}
+                      </span>
+                      <span style={{ fontSize: "9.5px", color: "var(--text-muted)", fontWeight: 700 }}>
+                        신뢰 {entry.trustScore} · 로그인 {formatDateTime(entry.lastLoginAt)}
+                      </span>
+                    </div>
+                  </td>
+                  <td style={{ ...cellStyle, textAlign: "right" }}>{entry.points}P</td>
+                  <td style={{ ...cellStyle, textAlign: "right" }}>{entry.reportCount}</td>
+                  <td style={{
+                    ...cellStyle,
+                    textAlign: "right",
+                    color: "var(--primary)",
+                    borderTopRightRadius: "8px",
+                    borderBottomRightRadius: "8px",
+                  }}>
+                    {entry.score}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          {userDirectory.length === 0 && (
+            <div style={{
+              padding: "26px 12px",
+              textAlign: "center",
+              color: "var(--text-muted)",
+              fontSize: "12px",
+              fontWeight: 750,
+              border: "1px dashed var(--border)",
+              borderRadius: "10px",
+            }}>
+              표시할 유저 데이터가 없습니다.
+            </div>
+          )}
+        </div>
+      </div>
+    </aside>
+  );
+}
