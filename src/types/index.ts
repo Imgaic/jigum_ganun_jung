@@ -34,7 +34,7 @@ export interface ChatMessage {
 // Core Database: CAU Places Mock Data
 // ==========================================
 export const INITIAL_PLACES = (): Place[] => {
-  return [
+  const places: Place[] = [
     {
       id: 1,
       building: "310관",
