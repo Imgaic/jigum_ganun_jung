@@ -19,6 +19,7 @@ export interface Place {
   updatedAt: number; // timestamp in ms
   reportsCount: number;
   history: PlaceHistory[];
+  imageUrl?: string; // 추가된 이미지 URL 필드
 }
 
 export interface ChatMessage {
@@ -44,6 +45,7 @@ export const INITIAL_PLACES = (): Place[] => {
       updatedAt: 0,
       reportsCount: 0,
       history: [],
+      imageUrl: "/images/310/310_daeshinhall_lounge.jpeg",
     },
     {
       id: 2,
@@ -56,6 +58,7 @@ export const INITIAL_PLACES = (): Place[] => {
       updatedAt: 0,
       reportsCount: 0,
       history: [],
+      imageUrl: "https://www.cau.ac.kr/vr2020/seoul/indexdata/pano_11759/thumbnail.jpg",
     },
     {
       id: 3,
@@ -68,6 +71,7 @@ export const INITIAL_PLACES = (): Place[] => {
       updatedAt: 0,
       reportsCount: 0,
       history: [],
+      imageUrl: "/images/310/310_5f_rest_area.jpeg",
     },
     {
       id: 4,
@@ -80,6 +84,7 @@ export const INITIAL_PLACES = (): Place[] => {
       updatedAt: 0,
       reportsCount: 0,
       history: [],
+      imageUrl: "https://www.cau.ac.kr/vr2020/seoul/indexdata/pano_11750/thumbnail.jpg",
     },
     {
       id: 5,
@@ -92,6 +97,7 @@ export const INITIAL_PLACES = (): Place[] => {
       updatedAt: 0,
       reportsCount: 0,
       history: [],
+      imageUrl: "https://www.cau.ac.kr/vr2020/seoul/indexdata/pano_11633/thumbnail.jpg",
     },
     {
       id: 6,
@@ -104,6 +110,7 @@ export const INITIAL_PLACES = (): Place[] => {
       updatedAt: 0,
       reportsCount: 0,
       history: [],
+      imageUrl: "https://www.cau.ac.kr/vr2020/seoul/indexdata/pano_11612/thumbnail.jpg",
     },
     {
       id: 7,
@@ -116,6 +123,7 @@ export const INITIAL_PLACES = (): Place[] => {
       updatedAt: 0,
       reportsCount: 0,
       history: [],
+      imageUrl: "https://www.cau.ac.kr/vr2020/seoul/indexdata/pano_11612/thumbnail.jpg",
     },
     {
       id: 8,
@@ -128,7 +136,73 @@ export const INITIAL_PLACES = (): Place[] => {
       updatedAt: 0,
       reportsCount: 0,
       history: [],
+      imageUrl: "https://www.cau.ac.kr/vr2020/seoul/indexdata/pano_11747/thumbnail.jpg",
     },
+    {
+      id: 9,
+      building: "303관",
+      floor: "2층",
+      name: "303관 2층 법학관 라운지",
+      detailLocation: "303관(법학관) 2층 중앙계단 옆 구역",
+      purposes: ["공부", "휴식", "대화"],
+      crowdLevel: 0,
+      updatedAt: 0,
+      reportsCount: 0,
+      history: [],
+      imageUrl: "https://www.cau.ac.kr/vr2020/seoul/indexdata/pano_11742/thumbnail.jpg",
+    },
+    {
+      id: 10,
+      building: "102관",
+      floor: "3층",
+      name: "102관 3층 약대 R&D 라운지",
+      detailLocation: "102관(약학대학 및 R&D센터) 3층 통유리 구역",
+      purposes: ["공부", "조용한 곳"],
+      crowdLevel: 0,
+      updatedAt: 0,
+      reportsCount: 0,
+      history: [],
+      imageUrl: "https://www.cau.ac.kr/vr2020/seoul/indexdata/pano_11597/thumbnail.jpg",
+    },
+    {
+      id: 11,
+      building: "201관",
+      floor: "1층",
+      name: "201관 1층 본관 로비 라운지",
+      detailLocation: "201관(본관) 1층 학사팀 맞은편 휴식테이블",
+      purposes: ["휴식", "대화"],
+      crowdLevel: 0,
+      updatedAt: 0,
+      reportsCount: 0,
+      history: [],
+      imageUrl: "https://www.cau.ac.kr/vr2020/seoul/indexdata/pano_11609/thumbnail.jpg",
+    },
+    {
+      id: 12,
+      building: "310관",
+      floor: "4층",
+      name: "310관 4층 융합콘텐츠라운지",
+      detailLocation: "310관 4층 중앙 에스컬레이터 옆 선큰광장 입구",
+      purposes: ["공부", "휴식", "대화"],
+      crowdLevel: 0,
+      updatedAt: 0,
+      reportsCount: 0,
+      history: [],
+      imageUrl: "/images/310/310_4f_lounge_1.jpeg",
+    },
+    {
+      id: 13,
+      building: "310관",
+      floor: "1층",
+      name: "310관 1층 하나 CAU i-Creator 스퀘어",
+      detailLocation: "310관 1층 정문 로비 옆 통유리 라운지",
+      purposes: ["공부", "휴식"],
+      crowdLevel: 0,
+      updatedAt: 0,
+      reportsCount: 0,
+      history: [],
+      imageUrl: "/images/310/310_1f_icreator_square.jpeg",
+    }
   ];
 };
 
@@ -141,4 +215,4 @@ export const PURPOSE_EMOJIS: { [key: string]: string } = {
   "조용한 곳": "🤫",
 };
 
-export const BUILDINGS = ["310관", "309관", "중앙도서관", "203관"];
+export const BUILDINGS = ["310관", "309관", "중앙도서관", "203관", "303관", "102관", "201관"];

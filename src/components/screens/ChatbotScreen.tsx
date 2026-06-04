@@ -6,19 +6,20 @@ import { ArrowLeftIcon, SendIcon } from "../Icons";
 import { useChatContext } from "../../context/ChatContext";
 import { useUserContext } from "../../context/UserContext";
 import CrowdBadge from "../CrowdBadge";
+import { calculateWeightedCrowdLevel } from "../../utils/crowdAnalyzer";
 
 export default function ChatbotScreen() {
   const router = useRouter();
 
   // 대화 및 유저 포인트 전역 Context 참조
-  const { chatMessages, handleSendChatMessage } = useChatContext();
+  const { chatMessages, handleSendChatMessage, isGenerating } = useChatContext();
   const { unlockedUntil, handlePromptUnlock, nowMs } = useUserContext();
 
   // 입력창 텍스트 상태 격리 (전역에서 페이지 로컬 상태로 하향화 완료!)
   const [chatInput, setChatInput] = useState<string>("");
 
   const onSendMessage = () => {
-    if (!chatInput.trim()) return;
+    if (!chatInput.trim() || isGenerating) return;
     // 메세지를 송출한 뒤, 콜백을 통해 입력 필드를 공백으로 지웁니다.
     handleSendChatMessage(chatInput, () => setChatInput(""));
   };
@@ -123,10 +124,11 @@ export default function ChatbotScreen() {
                     <div
                       key={place.id}
                       onClick={() => {
-                        if (unlockedUntil <= nowMs) {
-                          handlePromptUnlock();
-                        } else {
+                        const isUnknown = calculateWeightedCrowdLevel(place.history, nowMs) === 0;
+                        if (isUnknown || unlockedUntil > nowMs) {
                           router.push(`/detail/${place.id}`);
+                        } else {
+                          handlePromptUnlock();
                         }
                       }}
                       style={{
@@ -135,17 +137,41 @@ export default function ChatbotScreen() {
                         padding: "10px 12px",
                         borderRadius: "10px",
                         display: "flex",
-                        justifyContent: "space-between",
+                        gap: "10px",
                         alignItems: "center",
                         cursor: "pointer",
                         boxShadow: "var(--shadow-sm)"
                       }}
                     >
-                      <div>
+                      {/* 미니 썸네일 */}
+                      <div style={{
+                        width: "42px",
+                        height: "42px",
+                        borderRadius: "6px",
+                        overflow: "hidden",
+                        backgroundColor: "var(--surface-hover)",
+                        flexShrink: 0,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        border: "1px solid var(--border)"
+                      }}>
+                        {place.imageUrl ? (
+                          <img
+                            src={place.imageUrl}
+                            alt={place.name}
+                            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                          />
+                        ) : (
+                          <span style={{ fontSize: "16px" }}>🏢</span>
+                        )}
+                      </div>
+
+                      <div style={{ flex: 1, minWidth: 0 }}>
                         <span style={{ fontSize: "9px", fontWeight: "700", color: "var(--primary)" }}>
-                          🏢 {place.building}
+                          🏢 {place.building} {place.floor}
                         </span>
-                        <h4 style={{ fontSize: "12.5px", fontWeight: "800", color: "var(--foreground)" }}>
+                        <h4 style={{ fontSize: "12.5px", fontWeight: "800", color: "var(--foreground)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                           {place.name}
                         </h4>
                       </div>
@@ -159,6 +185,36 @@ export default function ChatbotScreen() {
             )}
           </div>
         ))}
+        {isGenerating && (
+          <div style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            alignSelf: "flex-start",
+            backgroundColor: "var(--surface)",
+            padding: "12px 16px",
+            borderRadius: "14px 14px 14px 0",
+            maxWidth: "80%",
+            boxShadow: "var(--shadow-sm)",
+            border: "1px dashed var(--primary)",
+            fontSize: "12px",
+            color: "var(--primary)",
+            fontWeight: "750",
+            marginTop: "6px",
+            marginBottom: "4px"
+          }}>
+            <span style={{
+              width: "12px",
+              height: "12px",
+              border: "2px solid var(--primary-light)",
+              borderTop: "2px solid var(--primary)",
+              borderRadius: "50%",
+              display: "inline-block",
+              animation: "spin 1s linear infinite"
+            }} />
+            <span>AI 도우미가 분석하고 있습니다... 🤖</span>
+          </div>
+        )}
       </div>
 
       {/* 하단 메세지 전송 인풋 창 */}
@@ -173,8 +229,9 @@ export default function ChatbotScreen() {
       }}>
         <input
           type="text"
-          placeholder="챗봇에게 공간에 대해 직접 물어보세요..."
+          placeholder={isGenerating ? "AI 답변 생성 대기 중..." : "챗봇에게 공간에 대해 직접 물어보세요..."}
           value={chatInput}
+          disabled={isGenerating}
           onChange={(e) => setChatInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && onSendMessage()}
           style={{
@@ -184,25 +241,28 @@ export default function ChatbotScreen() {
             borderRadius: "20px",
             fontSize: "13px",
             fontWeight: "600",
-            backgroundColor: "var(--background)",
+            backgroundColor: isGenerating ? "var(--surface-hover)" : "var(--background)",
             color: "var(--foreground)",
-            outline: "none"
+            outline: "none",
+            cursor: isGenerating ? "not-allowed" : "text"
           }}
         />
         <button
           onClick={onSendMessage}
+          disabled={isGenerating}
           style={{
             width: "36px",
             height: "36px",
             borderRadius: "50%",
-            backgroundColor: "var(--primary)",
+            backgroundColor: isGenerating ? "var(--border)" : "var(--primary)",
             border: "none",
-            color: "white",
+            color: isGenerating ? "var(--text-muted)" : "white",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            cursor: "pointer",
-            boxShadow: "var(--shadow-sm)"
+            cursor: isGenerating ? "not-allowed" : "pointer",
+            boxShadow: isGenerating ? "none" : "var(--shadow-sm)",
+            transition: "var(--transition-smooth)"
           }}
         >
           <SendIcon size={14} />
