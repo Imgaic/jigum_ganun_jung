@@ -295,25 +295,6 @@ export default function ExternalHud({
           ))}
         </div>
       </div>
-
-      {/* Demo Guide Tips */}
-      <div className="glass-panel" style={{
-        borderRadius: "var(--radius-md)",
-        padding: "20px",
-        border: "1px solid var(--border)",
-        display: "flex",
-        flexDirection: "column",
-        gap: "10px",
-        boxShadow: "var(--shadow-md)"
-      }}>
-        <h4 style={{ fontSize: "13px", fontWeight: "900", color: "var(--foreground)" }}>💡 기말 시연 시나리오 팁</h4>
-        <ul style={{ fontSize: "11.5px", color: "var(--text-muted)", display: "flex", flexDirection: "column", gap: "6px", paddingLeft: "14px", lineHeight: "1.5" }}>
-          <li><strong>목적별 탐색</strong>: 스마트폰 내부 홈 화면의 📚 <strong>공부</strong>, 🍔 <strong>식사</strong> 등의 버튼을 누르면 빠른 조건 필터링이 가동됩니다.</li>
-          <li><strong>실시간 제보 시연</strong>: 하단 <strong>제보하기</strong> 탭을 누르면 모의 GPS 검증 모션을 거쳐 혼잡도를 기입하고 🪙 <strong>+10P</strong>를 즉시 획득합니다.</li>
-          <li><strong>챗봇 추천 시연</strong>: <strong>AI 추천 챗봇</strong> 탭에서 칩 질문을 던지면 챗봇 메시지에 <strong>인터랙티브 추천 카드</strong>가 매핑됩니다.</li>
-          <li><strong>푸시 배너 연출</strong>: 앱 실행 15초 후 스마트폰 상단에 유효기간 체크 푸시 알림 배너가 튀어나옵니다!</li>
-        </ul>
-      </div>
     </div>
   );
 }
