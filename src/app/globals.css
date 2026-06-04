@@ -111,6 +111,49 @@ html, body {
   padding-right: 6px;
 }
 
+.panel-toggle {
+  position: fixed;
+  top: 20px;
+  z-index: 1100;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 72px;
+  height: 34px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.14);
+  color: white;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: 0;
+  transition: var(--transition-smooth);
+}
+
+.panel-toggle:hover {
+  background: rgba(255, 255, 255, 0.22);
+  transform: translateY(-1px);
+}
+
+.panel-toggle span {
+  font-size: 10px;
+  font-weight: 950;
+  letter-spacing: 0;
+}
+
+.panel-toggle-left {
+  left: 20px;
+}
+
+.panel-toggle-right {
+  right: 20px;
+}
+
 /* Custom Sleek Scrollbar for External HUD */
 .external-control-hud::-webkit-scrollbar,
 .external-user-panel::-webkit-scrollbar {
@@ -135,10 +178,18 @@ html, body {
   .external-control-hud {
     display: none; /* Hide on mobile/tablet viewports to keep smartphone screen layout 100% clean */
   }
+
+  .panel-toggle-left {
+    display: none;
+  }
 }
 
 @media (max-width: 1240px) {
   .external-user-panel {
+    display: none;
+  }
+
+  .panel-toggle-right {
     display: none;
   }
 }
