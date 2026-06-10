@@ -73,6 +73,11 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
 
       const data = await response.json();
 
+      // 개발자 도구 콘솔로 디버깅 및 시연 중 에러를 쉽게 확인할 수 있도록 출력
+      if (data.errorDetails) {
+        console.error("❌ [AI Chatbot Debug Error Details]:", data.errorDetails);
+      }
+
       const botMsg: ChatMessage = {
         id: chatMessages.length + 2,
         sender: "bot",

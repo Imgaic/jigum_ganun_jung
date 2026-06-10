@@ -111,7 +111,41 @@ ${message}
     });
 
     const data = await response.json();
-    const botText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+    // 1. API 호출 실패 방어 및 상세 로그 출력 (Vercel Logs 확인용)
+    if (!response.ok) {
+      console.error("Gemini API HTTP Error Status:", response.status);
+      console.error("Gemini API Error Payload:", JSON.stringify(data, null, 2));
+      const errMsg = data.error?.message || "Gemini API 일시적인 통신 실패";
+      return NextResponse.json({
+        text: "AI 응답을 생성하지 못했습니다. 다시 시도해 주세요.",
+        places: [],
+        errorDetails: {
+          type: "HTTP_ERROR",
+          status: response.status,
+          message: errMsg
+        }
+      });
+    }
+
+    // 2. 안전성 필터(Safety Block) 등으로 인해 candidates가 비어있는 경우 방어
+    const candidate = data.candidates?.[0];
+    if (!candidate) {
+      console.warn("Gemini API response candidate is missing. Full response payload:", JSON.stringify(data, null, 2));
+      const blockReason = data.promptFeedback?.blockReason || "UNKNOWN_BLOCK";
+      return NextResponse.json({
+        text: "AI 응답을 생성하지 못했습니다. 다시 시도해 주세요.",
+        places: [],
+        errorDetails: {
+          type: "SAFETY_BLOCK",
+          status: 200,
+          message: `AI가 답변 생성을 거부했거나 안전 필터에 의해 차단되었습니다 (사유: ${blockReason})`,
+          rawFeedback: data.promptFeedback
+        }
+      });
+    }
+
+    const botText = candidate.content?.parts?.[0]?.text;
 
     if (!botText) {
       return NextResponse.json({ text: "AI 응답을 생성하지 못했습니다. 다시 시도해 주세요.", places: [] });
