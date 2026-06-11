@@ -30,7 +30,7 @@ export default function DetailScreen({ selectedPlace }: DetailScreenProps) {
   ).length;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "16px", marginBottom: "24px" }}>
       {/* 상세화면 상단 뒤로 가기 헤더 */}
       <header style={{
         display: "flex",
