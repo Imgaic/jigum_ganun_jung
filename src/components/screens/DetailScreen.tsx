@@ -21,6 +21,7 @@ export default function DetailScreen({ selectedPlace }: DetailScreenProps) {
   const currentCalcLevel = calculateWeightedCrowdLevel(selectedPlace.history, nowMs);
   const isUnknown = currentCalcLevel === 0;
   const isUnlocked = unlockedUntil > nowMs;
+  const levelInfo = getCrowdLevelInfo(currentCalcLevel, selectedPlace.purposes);
 
   const buttonRewardPoints = isUnknown ? 30 : 10;
 
@@ -143,20 +144,20 @@ export default function DetailScreen({ selectedPlace }: DetailScreenProps) {
                   <span style={{
                     fontSize: "34px",
                     fontWeight: "950",
-                    color: getCrowdLevelInfo(currentCalcLevel).color
+                    color: levelInfo.color
                   }}>
-                    {getCrowdLevelInfo(currentCalcLevel).label}
+                    {levelInfo.label}
                   </span>
                   <span style={{
                     fontSize: "12.5px",
                     fontWeight: "800",
-                    color: getCrowdLevelInfo(currentCalcLevel).color,
-                    backgroundColor: getCrowdLevelInfo(currentCalcLevel).bg,
-                    border: `1.5px solid ${getCrowdLevelInfo(currentCalcLevel).border}`,
+                    color: levelInfo.color,
+                    backgroundColor: levelInfo.bg,
+                    border: `1.5px solid ${levelInfo.border}`,
                     padding: "3px 8px",
                     borderRadius: "8px"
                   }}>
-                    {getCrowdLevelInfo(currentCalcLevel).percentage}
+                    {levelInfo.percentage}
                   </span>
                 </div>
                 <p style={{
@@ -166,9 +167,11 @@ export default function DetailScreen({ selectedPlace }: DetailScreenProps) {
                   marginTop: "2px",
                   maxWidth: "320px",
                   lineHeight: "1.4",
-                  textAlign: "center"
+                  textAlign: "center",
+                  whiteSpace: "pre-line",
+                  wordBreak: "keep-all"
                 }}>
-                  {getCrowdLevelInfo(currentCalcLevel).description}
+                  {levelInfo.description}
                 </p>
               </div>
 
@@ -187,7 +190,7 @@ export default function DetailScreen({ selectedPlace }: DetailScreenProps) {
                     key={lvl}
                     style={{
                       flex: 1,
-                      backgroundColor: lvl <= currentCalcLevel ? getCrowdLevelInfo(currentCalcLevel).color : "transparent",
+                      backgroundColor: lvl <= currentCalcLevel ? levelInfo.color : "transparent",
                       opacity: lvl <= currentCalcLevel ? 1 - (currentCalcLevel - lvl) * 0.15 : 0,
                       borderRight: lvl < 5 ? "2.5px solid var(--surface)" : "none"
                     }}
@@ -250,8 +253,8 @@ export default function DetailScreen({ selectedPlace }: DetailScreenProps) {
                     <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
                       <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                         <span style={{ fontSize: "12px", fontWeight: "700" }}>제보 혼잡도:</span>
-                        <span style={{ fontSize: "12px", fontWeight: "800", color: getCrowdLevelInfo(hist.crowdLevel).color }}>
-                          {getCrowdLevelInfo(hist.crowdLevel).label}
+                        <span style={{ fontSize: "12px", fontWeight: "800", color: getCrowdLevelInfo(hist.crowdLevel, selectedPlace.purposes).color }}>
+                          {getCrowdLevelInfo(hist.crowdLevel, selectedPlace.purposes).label}
                         </span>
                       </div>
                       {hist.reporter && (

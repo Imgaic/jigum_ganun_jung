@@ -8,6 +8,7 @@ import { useUserContext } from "../../context/UserContext";
 import { usePlacesContext } from "../../context/PlaceContext";
 import CrowdBadge from "../CrowdBadge";
 import { calculateWeightedCrowdLevel } from "../../utils/crowdAnalyzer";
+import { Place } from "../../types";
 
 export default function ChatbotScreen() {
   const router = useRouter();
@@ -325,8 +326,8 @@ export default function ChatbotScreen() {
 // 챗봇 답변 본문에 포함된 추천 장소들의 이름을 클릭 시 상세 페이지로 이동하는 링크로 변환합니다.
 function renderTextWithPlaceLinks(
   text: string,
-  msgPlaces: any[] | undefined,
-  router: any,
+  msgPlaces: Place[] | undefined,
+  router: ReturnType<typeof useRouter>,
   unlockedUntil: number,
   nowMs: number,
   handlePromptUnlock: () => void

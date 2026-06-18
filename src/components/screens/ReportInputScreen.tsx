@@ -35,10 +35,10 @@ export default function ReportInputScreen() {
   const [reportedDuration, setReportedDuration] = useState<number>(30); // 기본 30분 예상
 
   const filteredPlaces = places.filter((p) => p.building === queryBuilding);
+  const targetPlaceObj = places.find((p) => p.id === reportedPlaceId);
 
   // 제보 등록 및 보상 산정 비즈니스 로직 (하향화 완료!)
   const handleSubmitReport = async () => {
-    const targetPlaceObj = places.find((p) => p.id === reportedPlaceId);
     if (!targetPlaceObj) return;
 
     const submittedAt = getVirtualNow();
@@ -109,7 +109,7 @@ export default function ReportInputScreen() {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "16px", marginBottom: "24px" }}>
       {/* 상단 뒤로 가기 */}
       <header style={{
         display: "flex",
@@ -164,7 +164,7 @@ export default function ReportInputScreen() {
 
           <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
             {([1, 2, 3, 4, 5] as const).map((level) => {
-              const lvlInfo = getCrowdLevelInfo(level);
+              const lvlInfo = getCrowdLevelInfo(level, targetPlaceObj?.purposes);
               const isSelected = reportedCrowdLevel === level;
 
               return (
@@ -206,7 +206,9 @@ export default function ReportInputScreen() {
                       color: isSelected ? "var(--foreground)" : "var(--text-muted)",
                       fontWeight: "500",
                       opacity: isSelected ? 0.9 : 0.75,
-                      lineHeight: "1.3"
+                      lineHeight: "1.3",
+                      whiteSpace: "pre-line",
+                      wordBreak: "keep-all"
                     }}>
                       {lvlInfo.description}
                     </span>
