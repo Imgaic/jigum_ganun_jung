@@ -59,6 +59,8 @@ export interface CrowdLevelInfo {
   color: string;
   bg: string;
   border: string;
+  percentage: string;
+  description: string;
 }
 
 /**
@@ -68,18 +70,67 @@ export interface CrowdLevelInfo {
 export function getCrowdLevelInfo(level: number): CrowdLevelInfo {
   switch (level) {
     case 0:
-      return { label: "알 수 없음", color: "#787880", bg: "rgba(120, 120, 128, 0.12)", border: "rgba(120, 120, 128, 0.25)" };
+      return {
+        label: "알 수 없음",
+        color: "#787880",
+        bg: "rgba(120, 120, 128, 0.12)",
+        border: "rgba(120, 120, 128, 0.25)",
+        percentage: "-",
+        description: "최근 30분 내 제보가 없어 혼잡도를 알 수 없습니다."
+      };
     case 1:
-      return { label: "매우 한산", color: "#10b981", bg: "rgba(16, 185, 129, 0.12)", border: "rgba(16, 185, 129, 0.3)" };
+      return {
+        label: "매우 여유",
+        color: "#10b981",
+        bg: "rgba(16, 185, 129, 0.12)",
+        border: "rgba(16, 185, 129, 0.3)",
+        percentage: "20% 이하",
+        description: "아무런 제한 없이 목적에 따른 행동을 할 수 있는 정도"
+      };
     case 2:
-      return { label: "여유", color: "#34d399", bg: "rgba(52, 211, 153, 0.12)", border: "rgba(52, 211, 153, 0.3)" };
+      return {
+        label: "여유",
+        color: "#34d399",
+        bg: "rgba(52, 211, 153, 0.12)",
+        border: "rgba(52, 211, 153, 0.3)",
+        percentage: "20~40%",
+        description: "사람이 거의 없고 행동에 제약이 없는 정도"
+      };
     case 3:
-      return { label: "보통", color: "#3b82f6", bg: "rgba(59, 130, 246, 0.12)", border: "rgba(59, 130, 246, 0.3)" };
+      return {
+        label: "보통",
+        color: "#3b82f6",
+        bg: "rgba(59, 130, 246, 0.12)",
+        border: "rgba(59, 130, 246, 0.3)",
+        percentage: "40~60%",
+        description: "사람이 적당히 있고, 목적에 따른 행동도 원활히 할 수 있는 정도"
+      };
     case 4:
-      return { label: "붐빔", color: "#f59e0b", bg: "rgba(245, 158, 11, 0.12)", border: "rgba(245, 158, 11, 0.3)" };
+      return {
+        label: "혼잡",
+        color: "#f59e0b",
+        bg: "rgba(245, 158, 11, 0.12)",
+        border: "rgba(245, 158, 11, 0.3)",
+        percentage: "60~80%",
+        description: "사람이 많지만 목적에 따른 행동을 할 수는 있는 정도"
+      };
     case 5:
-      return { label: "매우 혼잡", color: "#ef4444", bg: "rgba(239, 68, 68, 0.12)", border: "rgba(239, 68, 68, 0.3)" };
+      return {
+        label: "매우 혼잡",
+        color: "#ef4444",
+        bg: "rgba(239, 68, 68, 0.12)",
+        border: "rgba(239, 68, 68, 0.3)",
+        percentage: "80% 이상",
+        description: "목적에 따른 행동을 하기에 제약이 있고 기다려야 할 정도"
+      };
     default:
-      return { label: "정보 없음", color: "#6b7280", bg: "rgba(107, 114, 128, 0.12)", border: "rgba(107, 114, 128, 0.3)" };
+      return {
+        label: "정보 없음",
+        color: "#6b7280",
+        bg: "rgba(107, 114, 128, 0.12)",
+        border: "rgba(107, 114, 128, 0.3)",
+        percentage: "-",
+        description: "정보가 존재하지 않습니다."
+      };
   }
 }

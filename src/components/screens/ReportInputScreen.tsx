@@ -177,15 +177,40 @@ export default function ReportInputScreen() {
                     alignItems: "center",
                     padding: "12px 16px",
                     borderRadius: "10px",
-                    border: isSelected ? `2.5px solid ${lvlInfo.color}` : "1px solid var(--border)",
+                    border: isSelected ? `2.5px solid ${lvlInfo.color}` : "1.5px solid var(--border)",
                     backgroundColor: isSelected ? lvlInfo.bg : "var(--surface)",
                     cursor: "pointer",
-                    transition: "var(--transition-smooth)"
+                    transition: "var(--transition-smooth)",
+                    textAlign: "left"
                   }}
                 >
-                  <span style={{ fontSize: "13px", fontWeight: "800", color: isSelected ? lvlInfo.color : "var(--foreground)" }}>
-                    {level}단계 - {lvlInfo.label}
-                  </span>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "4px", flex: 1, paddingRight: "8px" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                      <span style={{ fontSize: "13.5px", fontWeight: "800", color: isSelected ? lvlInfo.color : "var(--foreground)" }}>
+                        {level}단계 - {lvlInfo.label}
+                      </span>
+                      <span style={{
+                        fontSize: "10px",
+                        fontWeight: "800",
+                        color: isSelected ? lvlInfo.color : "var(--text-muted)",
+                        backgroundColor: isSelected ? "rgba(255, 255, 255, 0.45)" : "var(--surface-hover)",
+                        padding: "2px 6px",
+                        borderRadius: "6px",
+                        border: isSelected ? `1px solid ${lvlInfo.border}` : "1px solid var(--border)"
+                      }}>
+                        {lvlInfo.percentage}
+                      </span>
+                    </div>
+                    <span style={{
+                      fontSize: "11px",
+                      color: isSelected ? "var(--foreground)" : "var(--text-muted)",
+                      fontWeight: "500",
+                      opacity: isSelected ? 0.9 : 0.75,
+                      lineHeight: "1.3"
+                    }}>
+                      {lvlInfo.description}
+                    </span>
+                  </div>
 
                   <span style={{
                     width: "18px",
@@ -193,7 +218,8 @@ export default function ReportInputScreen() {
                     borderRadius: "50%",
                     border: isSelected ? `5px solid ${lvlInfo.color}` : "2px solid var(--border)",
                     backgroundColor: "var(--surface)",
-                    transition: "var(--transition-smooth)"
+                    transition: "var(--transition-smooth)",
+                    flexShrink: 0
                   }} />
                 </button>
               );

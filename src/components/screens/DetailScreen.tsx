@@ -138,14 +138,38 @@ export default function DetailScreen({ selectedPlace }: DetailScreenProps) {
             </div>
           ) : isUnlocked ? (
             <>
-              <div style={{ margin: "14px 0" }}>
-                <span style={{
-                  fontSize: "36px",
-                  fontWeight: "950",
-                  color: getCrowdLevelInfo(currentCalcLevel).color
+              <div style={{ margin: "16px 0", display: "flex", flexDirection: "column", alignItems: "center", gap: "6px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px", justifyContent: "center" }}>
+                  <span style={{
+                    fontSize: "34px",
+                    fontWeight: "950",
+                    color: getCrowdLevelInfo(currentCalcLevel).color
+                  }}>
+                    {getCrowdLevelInfo(currentCalcLevel).label}
+                  </span>
+                  <span style={{
+                    fontSize: "12.5px",
+                    fontWeight: "800",
+                    color: getCrowdLevelInfo(currentCalcLevel).color,
+                    backgroundColor: getCrowdLevelInfo(currentCalcLevel).bg,
+                    border: `1.5px solid ${getCrowdLevelInfo(currentCalcLevel).border}`,
+                    padding: "3px 8px",
+                    borderRadius: "8px"
+                  }}>
+                    {getCrowdLevelInfo(currentCalcLevel).percentage}
+                  </span>
+                </div>
+                <p style={{
+                  fontSize: "12px",
+                  color: "var(--text-muted)",
+                  fontWeight: "600",
+                  marginTop: "2px",
+                  maxWidth: "320px",
+                  lineHeight: "1.4",
+                  textAlign: "center"
                 }}>
-                  {getCrowdLevelInfo(currentCalcLevel).label}
-                </span>
+                  {getCrowdLevelInfo(currentCalcLevel).description}
+                </p>
               </div>
 
               {/* 시각적인 혼잡 게이지 바 */}
